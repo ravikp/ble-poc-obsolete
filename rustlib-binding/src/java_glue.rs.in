@@ -1,0 +1,10 @@
+use crate::Session;
+use jni_sys::*;
+
+// ANCHOR: api
+foreign_class!(class Session {
+    self_type Session;
+    constructor Session::new() -> Session;
+    fn Session::action(to: &str) -> String;
+});
+// ANCHOR_END: api

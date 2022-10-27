@@ -1,0 +1,602 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A675AA728FD90BD00A2F3E8 /* rusty_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A675AA628FD90BD00A2F3E8 /* rusty_iosApp.swift */; };
+		0A675AA928FD90BD00A2F3E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A675AA828FD90BD00A2F3E8 /* ContentView.swift */; };
+		0A675AAB28FD90BF00A2F3E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A675AAA28FD90BF00A2F3E8 /* Assets.xcassets */; };
+		0A675AAE28FD90BF00A2F3E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A675AAD28FD90BF00A2F3E8 /* Preview Assets.xcassets */; };
+		0A675AB828FD90BF00A2F3E8 /* rusty_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A675AB728FD90BF00A2F3E8 /* rusty_iosTests.swift */; };
+		0A675AC228FD90BF00A2F3E8 /* rusty_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A675AC128FD90BF00A2F3E8 /* rusty_iosUITests.swift */; };
+		0A675AC428FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A675AC328FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift */; };
+		0A675AD7290175D400A2F3E8 /* librustylib_binding.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A675AD62901758100A2F3E8 /* librustylib_binding.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0A675AB428FD90BF00A2F3E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A675A9B28FD90BD00A2F3E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A675AA228FD90BD00A2F3E8;
+			remoteInfo = "rusty-ios";
+		};
+		0A675ABE28FD90BF00A2F3E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A675A9B28FD90BD00A2F3E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A675AA228FD90BD00A2F3E8;
+			remoteInfo = "rusty-ios";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0A675AA328FD90BD00A2F3E8 /* rusty-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "rusty-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A675AA628FD90BD00A2F3E8 /* rusty_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rusty_iosApp.swift; sourceTree = "<group>"; };
+		0A675AA828FD90BD00A2F3E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0A675AAA28FD90BF00A2F3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0A675AAD28FD90BF00A2F3E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		0A675AB328FD90BF00A2F3E8 /* rusty-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rusty-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A675AB728FD90BF00A2F3E8 /* rusty_iosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rusty_iosTests.swift; sourceTree = "<group>"; };
+		0A675ABD28FD90BF00A2F3E8 /* rusty-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rusty-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A675AC128FD90BF00A2F3E8 /* rusty_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rusty_iosUITests.swift; sourceTree = "<group>"; };
+		0A675AC328FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rusty_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		0A675AD428FDA6DB00A2F3E8 /* librustylib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librustylib.a; path = ../libs/librustylib.a; sourceTree = "<group>"; };
+		0A675AD62901758100A2F3E8 /* librustylib_binding.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librustylib_binding.a; path = ../libs/librustylib_binding.a; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0A675AA028FD90BD00A2F3E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A675AD7290175D400A2F3E8 /* librustylib_binding.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A675AB028FD90BF00A2F3E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A675ABA28FD90BF00A2F3E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A675A9A28FD90BD00A2F3E8 = {
+			isa = PBXGroup;
+			children = (
+				0A675AA528FD90BD00A2F3E8 /* rusty-ios */,
+				0A675AB628FD90BF00A2F3E8 /* rusty-iosTests */,
+				0A675AC028FD90BF00A2F3E8 /* rusty-iosUITests */,
+				0A675AA428FD90BD00A2F3E8 /* Products */,
+				0A675AD328FDA6DB00A2F3E8 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		0A675AA428FD90BD00A2F3E8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A675AA328FD90BD00A2F3E8 /* rusty-ios.app */,
+				0A675AB328FD90BF00A2F3E8 /* rusty-iosTests.xctest */,
+				0A675ABD28FD90BF00A2F3E8 /* rusty-iosUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A675AA528FD90BD00A2F3E8 /* rusty-ios */ = {
+			isa = PBXGroup;
+			children = (
+				0A675AA628FD90BD00A2F3E8 /* rusty_iosApp.swift */,
+				0A675AA828FD90BD00A2F3E8 /* ContentView.swift */,
+				0A675AAA28FD90BF00A2F3E8 /* Assets.xcassets */,
+				0A675AAC28FD90BF00A2F3E8 /* Preview Content */,
+			);
+			path = "rusty-ios";
+			sourceTree = "<group>";
+		};
+		0A675AAC28FD90BF00A2F3E8 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				0A675AAD28FD90BF00A2F3E8 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		0A675AB628FD90BF00A2F3E8 /* rusty-iosTests */ = {
+			isa = PBXGroup;
+			children = (
+				0A675AB728FD90BF00A2F3E8 /* rusty_iosTests.swift */,
+			);
+			path = "rusty-iosTests";
+			sourceTree = "<group>";
+		};
+		0A675AC028FD90BF00A2F3E8 /* rusty-iosUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0A675AC128FD90BF00A2F3E8 /* rusty_iosUITests.swift */,
+				0A675AC328FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift */,
+			);
+			path = "rusty-iosUITests";
+			sourceTree = "<group>";
+		};
+		0A675AD328FDA6DB00A2F3E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0A675AD62901758100A2F3E8 /* librustylib_binding.a */,
+				0A675AD428FDA6DB00A2F3E8 /* librustylib.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0A675AA228FD90BD00A2F3E8 /* rusty-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A675AC728FD90BF00A2F3E8 /* Build configuration list for PBXNativeTarget "rusty-ios" */;
+			buildPhases = (
+				0A675A9F28FD90BD00A2F3E8 /* Sources */,
+				0A675AA028FD90BD00A2F3E8 /* Frameworks */,
+				0A675AA128FD90BD00A2F3E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "rusty-ios";
+			productName = "rusty-ios";
+			productReference = 0A675AA328FD90BD00A2F3E8 /* rusty-ios.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0A675AB228FD90BF00A2F3E8 /* rusty-iosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A675ACA28FD90BF00A2F3E8 /* Build configuration list for PBXNativeTarget "rusty-iosTests" */;
+			buildPhases = (
+				0A675AAF28FD90BF00A2F3E8 /* Sources */,
+				0A675AB028FD90BF00A2F3E8 /* Frameworks */,
+				0A675AB128FD90BF00A2F3E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A675AB528FD90BF00A2F3E8 /* PBXTargetDependency */,
+			);
+			name = "rusty-iosTests";
+			productName = "rusty-iosTests";
+			productReference = 0A675AB328FD90BF00A2F3E8 /* rusty-iosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		0A675ABC28FD90BF00A2F3E8 /* rusty-iosUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A675ACD28FD90BF00A2F3E8 /* Build configuration list for PBXNativeTarget "rusty-iosUITests" */;
+			buildPhases = (
+				0A675AB928FD90BF00A2F3E8 /* Sources */,
+				0A675ABA28FD90BF00A2F3E8 /* Frameworks */,
+				0A675ABB28FD90BF00A2F3E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A675ABF28FD90BF00A2F3E8 /* PBXTargetDependency */,
+			);
+			name = "rusty-iosUITests";
+			productName = "rusty-iosUITests";
+			productReference = 0A675ABD28FD90BF00A2F3E8 /* rusty-iosUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0A675A9B28FD90BD00A2F3E8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1400;
+				LastUpgradeCheck = 1400;
+				TargetAttributes = {
+					0A675AA228FD90BD00A2F3E8 = {
+						CreatedOnToolsVersion = 14.0.1;
+					};
+					0A675AB228FD90BF00A2F3E8 = {
+						CreatedOnToolsVersion = 14.0.1;
+						TestTargetID = 0A675AA228FD90BD00A2F3E8;
+					};
+					0A675ABC28FD90BF00A2F3E8 = {
+						CreatedOnToolsVersion = 14.0.1;
+						TestTargetID = 0A675AA228FD90BD00A2F3E8;
+					};
+				};
+			};
+			buildConfigurationList = 0A675A9E28FD90BD00A2F3E8 /* Build configuration list for PBXProject "rusty-ios" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0A675A9A28FD90BD00A2F3E8;
+			productRefGroup = 0A675AA428FD90BD00A2F3E8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0A675AA228FD90BD00A2F3E8 /* rusty-ios */,
+				0A675AB228FD90BF00A2F3E8 /* rusty-iosTests */,
+				0A675ABC28FD90BF00A2F3E8 /* rusty-iosUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0A675AA128FD90BD00A2F3E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A675AAE28FD90BF00A2F3E8 /* Preview Assets.xcassets in Resources */,
+				0A675AAB28FD90BF00A2F3E8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A675AB128FD90BF00A2F3E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A675ABB28FD90BF00A2F3E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A675A9F28FD90BD00A2F3E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A675AA928FD90BD00A2F3E8 /* ContentView.swift in Sources */,
+				0A675AA728FD90BD00A2F3E8 /* rusty_iosApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A675AAF28FD90BF00A2F3E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A675AB828FD90BF00A2F3E8 /* rusty_iosTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A675AB928FD90BF00A2F3E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A675AC428FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift in Sources */,
+				0A675AC228FD90BF00A2F3E8 /* rusty_iosUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0A675AB528FD90BF00A2F3E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A675AA228FD90BD00A2F3E8 /* rusty-ios */;
+			targetProxy = 0A675AB428FD90BF00A2F3E8 /* PBXContainerItemProxy */;
+		};
+		0A675ABF28FD90BF00A2F3E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A675AA228FD90BD00A2F3E8 /* rusty-ios */;
+			targetProxy = 0A675ABE28FD90BF00A2F3E8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0A675AC528FD90BF00A2F3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		0A675AC628FD90BF00A2F3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0A675AC828FD90BF00A2F3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"rusty-ios/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../include";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/../libs";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/../include/rustylib.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0A675AC928FD90BF00A2F3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"rusty-ios/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../include";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/../libs";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/../include/rustylib.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		0A675ACB28FD90BF00A2F3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/rusty-ios.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/rusty-ios";
+			};
+			name = Debug;
+		};
+		0A675ACC28FD90BF00A2F3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/rusty-ios.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/rusty-ios";
+			};
+			name = Release;
+		};
+		0A675ACE28FD90BF00A2F3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-iosUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "rusty-ios";
+			};
+			name = Debug;
+		};
+		0A675ACF28FD90BF00A2F3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-iosUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "rusty-ios";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A675A9E28FD90BD00A2F3E8 /* Build configuration list for PBXProject "rusty-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A675AC528FD90BF00A2F3E8 /* Debug */,
+				0A675AC628FD90BF00A2F3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A675AC728FD90BF00A2F3E8 /* Build configuration list for PBXNativeTarget "rusty-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A675AC828FD90BF00A2F3E8 /* Debug */,
+				0A675AC928FD90BF00A2F3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A675ACA28FD90BF00A2F3E8 /* Build configuration list for PBXNativeTarget "rusty-iosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A675ACB28FD90BF00A2F3E8 /* Debug */,
+				0A675ACC28FD90BF00A2F3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A675ACD28FD90BF00A2F3E8 /* Build configuration list for PBXNativeTarget "rusty-iosUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A675ACE28FD90BF00A2F3E8 /* Debug */,
+				0A675ACF28FD90BF00A2F3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0A675A9B28FD90BD00A2F3E8 /* Project object */;
+}
