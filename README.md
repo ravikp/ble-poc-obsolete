@@ -1,5 +1,7 @@
-# Kickstart re-usable shared lib rust project
-* Create a root directory
+# Kickstarter for the re-usable shared lib based on rust to be used in android and iOS
+
+* Install Rust
+`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
 
 * Run the command
 `mkdir android ios flutter rust`
