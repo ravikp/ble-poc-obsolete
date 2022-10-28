@@ -37,8 +37,8 @@
 * Install additional SDK tools from Android Studio
   > Open Preferences -> System Settings -> Android SDK -> SDK Tools -> Select NDK (side by side), CMake, Android SDK Command Line Tools, Android SDK Platform Tools
 
-> Note: If after installing addtional tools via android studio, if you can't find this folder `(ANDROID_HOME)/ndk-bundle`. You may have to install ndk-bundle using
-`~/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager "ndk-bundle”`
+> Note: If after installing addtional tools via android studio, if you can't find this folder `(ANDROID_HOME)/ndk-bundle`. You may have to install ndk-bundle using 
+`$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk-bundle”`
 
 * Set ANDROID_HOME, and NDK_HOME
 `echo "ANDROID_HOME=$HOME/Library/Android/sdk" >> ~/.zshrc`
@@ -81,6 +81,17 @@ ar = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/
 
 linker = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android28-clang"
 ```
+
+* If you are using NDK > v22.0, they use lunwind and migrated from libgcc. Without this fix, the NDK toolchain still uses libgcc. Make the following change. Create a file called libgcc.a in the lib directory of the target ndk and redirect to libunwind. Do this for every target. The solution is given at(https://stackoverflow.com/questions/68873570/how-do-i-fix-ld-error-unable-to-find-library-lgcc-when-cross-compiling-rust)
+
+`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/11.0.5/lib/linux/x86_64/libgcc.a`
+
+`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/11.0.5/lib/linux/aarch64/libgcc.a`
+
+`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/11.0.5/lib/linux/arm/libgcc.a`
+
+`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/11.0.5/lib/linux/i386/libgcc.a`
+
 
 * Build for different android targets
 ```bash
