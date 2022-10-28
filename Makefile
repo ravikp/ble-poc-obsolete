@@ -22,12 +22,18 @@ setup_dirs:
 	mkdir -p $(android_jni_libs_dir)/armeabi-v7a
 	mkdir -p $(android_jni_libs_dir)/arm64-v8a
 
+setup_tools:
+	cargo install uniffi_bindgen
+
+clean_dirs:
+	rm -rf $(ios_inc_dir) $(ios_libs_dir) $(shared_lib_output) $(android_jni_libs_dir)
+
 clean:
-	rm -rf $(ios_inc_dir) $(ios_libs_dir) $(shared_lib_ios_output) $(shared_lib_android_output) $(shared_lib_generated_java_source_dir)
-	rm -rf $(shared_lib_android_jni_output) $(shared_lib_generated_headers)
-	rm -rf $(android_jni_libs_dir)/x86_64
-	rm -rf $(android_jni_libs_dir)/armeabi-v7a
-	rm -rf $(android_jni_libs_dir)/arm64-v8a
+	rm -rf $(ios_inc_dir)/**/* $(ios_libs_dir)/**/* $(shared_lib_ios_output)/**/* $(shared_lib_android_output)/**/* $(shared_lib_generated_java_source_dir)/**/*
+	rm -rf $(shared_lib_android_jni_output)/**/* $(shared_lib_generated_headers)/**/*
+	rm -rf $(android_jni_libs_dir)/x86_64/**/*
+	rm -rf $(android_jni_libs_dir)/armeabi-v7a/**/*
+	rm -rf $(android_jni_libs_dir)/arm64-v8a/**/*
 
 	cargo clean --manifest-path=$(shared_lib_dir)/Cargo.toml
 
