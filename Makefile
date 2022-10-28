@@ -33,10 +33,19 @@ clean:
 
 build: setup_dirs build_ios_shared_lib _copy_shared_to_ios build_android_shared_lib _copy_shared_to_android
 
-build_android_shared_lib:
+build_android_shared_lib_x86_64:
 	cargo build --target x86_64-linux-android    --manifest-path=$(shared_lib_dir)/Cargo.toml
+
+build_android_shared_lib_aarch64:
 	cargo build --target aarch64-linux-android   --manifest-path=$(shared_lib_dir)/Cargo.toml
+
+build_android_shared_lib_armv7:
 	cargo build --target armv7-linux-androideabi --manifest-path=$(shared_lib_dir)/Cargo.toml
+
+build_android_shared_lib_i686:
+	cargo build --target i686-linux-android --manifest-path=$(shared_lib_dir)/Cargo.toml
+
+build_android_shared_lib: build_android_shared_lib_x86_64 build_android_shared_lib_armv7 build_android_shared_lib_aarch64
 
 build_ios_shared_lib:
 	cargo build --manifest-path=$(shared_lib_dir)/Cargo.toml

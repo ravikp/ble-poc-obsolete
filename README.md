@@ -32,7 +32,13 @@
 
 # Install tools for Android
 
-* Install Android and NDK from android studio
+* Install Android Studio
+
+* Install additional SDK tools from Android Studio
+  > Open Preferences -> System Settings -> Android SDK -> SDK Tools -> Select NDK (side by side), CMake, Android SDK Command Line Tools, Android SDK Platform Tools
+
+> Note: If after installing addtional tools via android studio, if you can't find this folder `(ANDROID_HOME)/ndk-bundle`. You may have to install ndk-bundle using 
+`~/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager "ndk-bundle”`
 
 * Set ANDROID_HOME, and NDK_HOME
 `echo "ANDROID_HOME=$HOME/Library/Android/sdk" >> ~/.zshrc`
@@ -44,9 +50,47 @@
 * Install cargo-ndk
 `cargo install cargo-ndk`
 
+# Compile for android
 * And setup ANDROID_NDK_HOME for cargo ndk to work properly
 `ANDROID_NDK_HOME=/Users/ravikup/Library/Android/sdk/ndk/25.1.8937393`
 
+* Create cargo config in `~/.cargo/config` with following contents
+
+```toml
+[target.x86_64-linux-android]
+
+ar = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/x86_64-linux-android-ar"
+
+linker = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/x86_64-linux-android28-clang"
+
+[target.aarch64-linux-android]
+
+ar = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android-ar"
+
+linker = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android28-clang"
+
+[target.armv7-linux-androideabi]
+
+ar = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ar"
+
+linker = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi28-clang"
+
+[target.i686-linux-android]
+
+ar = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android-ar"
+
+linker = "/Users/<username>/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android28-clang"
+```
+
+* Build for different android targets
+```bash
+make build_android_shared_lib_x86_64
+make build_android_shared_lib_armv7
+make build_android_shared_lib_aarch64
+make build_android_shared_lib_i686
+```
+
+# Obsolete 
 * Setup toolchains for android
 ```
 mkdir ~/.NDK
