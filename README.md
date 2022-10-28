@@ -70,16 +70,6 @@ linker = "/Users/<username>/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm
 linker = "/Users/<username>/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android28-clang"
 ```
 
-* If you are using NDK > v22.0, they use lunwind and migrated from libgcc. Without this fix, the NDK toolchain still uses libgcc. Make the following change. Create a file called libgcc.a in the lib directory of the target ndk and redirect to libunwind. Do this for every target. The solution is given at(https://stackoverflow.com/questions/68873570/how-do-i-fix-ld-error-unable-to-find-library-lgcc-when-cross-compiling-rust)
-
-`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/lib/linux/x86_64/libgcc.a`
-
-`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/lib/linux/aarch64/libgcc.a`
-
-`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/lib/linux/arm/libgcc.a`
-
-`echo "INPUT(-lunwind)" > ~/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/lib/linux/i386/libgcc.a`
-
 * Build for different android targets
 ```bash
 make build_android_shared_lib_x86_64
