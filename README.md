@@ -37,9 +37,6 @@
 * Install additional SDK tools from Android Studio
   > Open Preferences -> System Settings -> Android SDK -> SDK Tools -> Select NDK (side by side), CMake, Android SDK Command Line Tools, Android SDK Platform Tools
 
-> Note: If after installing addtional tools via android studio, if you can't find this folder `(ANDROID_HOME)/ndk-bundle`. You may have to install ndk-bundle using 
-`$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk-bundle”`
-
 * Set ANDROID_HOME, and NDK_HOME
 `echo "ANDROID_HOME=$HOME/Library/Android/sdk" >> ~/.zshrc`
 `echo "NDK_HOME=$HOME/Library/Android/sdk/ndk/25.1.8937393" >> ~/.zshrc`
