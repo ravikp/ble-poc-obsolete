@@ -46,7 +46,7 @@ build_android_shared_lib_aarch64:
 	cargo build --target aarch64-linux-android --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 build_android_shared_lib_armv7:
-	cargo build --target armv7-linux-androideabi  --manifest-path=$(shared_lib_dir)/Cargo.toml
+	# cargo build --target armv7-linux-androideabi  --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 build_android_shared_lib_i686:
 	cargo build --target i686-linux-android  --manifest-path=$(shared_lib_dir)/Cargo.toml
@@ -69,6 +69,6 @@ _copy_shared_to_ios:
 _copy_shared_to_android:
 	cp -f $(shared_lib_dir)/target/x86_64-linux-android/debug/librustylib_binding.so $(android_jni_libs_dir)/x86_64
 	cp -f $(shared_lib_dir)/target/aarch64-linux-android/debug/librustylib_binding.so $(android_jni_libs_dir)/arm64-v8a
-	cp -f $(shared_lib_dir)/target/armv7-linux-androideabi/debug/librustylib_binding.so $(android_jni_libs_dir)/armeabi-v7a
+	# cp -f $(shared_lib_dir)/target/armv7-linux-androideabi/debug/librustylib_binding.so $(android_jni_libs_dir)/armeabi-v7a
 
 setup_ios: setup_dirs copy_shared_to_ios
