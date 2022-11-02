@@ -28,12 +28,30 @@ pub unsafe extern "C" fn hello_release(item: *mut c_char) {
 #[cfg(target_os = "android")]
 #[allow(non_snake_case)]
 mod android {
+    use chrono::{Duration, Utc};
     use core::slice::{self};
-    use jni::objects::{JClass, JString, ReleaseMode, AutoArray};
+    use jni::objects::{AutoArray, JClass, JString, ReleaseMode};
+    use jni::strings::JNIString;
+    use jni::sys::jbyteArray;
     use jni::sys::jstring;
     use jni::JNIEnv;
-    use jni::sys::jbyteArray;
-    use jni::sys::jbyte;
+
+    use ed25519_compact::SecretKey;
+    use jwt_compact::{alg::Ed25519, prelude::*, Renamed, TimeOptions};
+    use serde::{Deserialize, Serialize};
+    use std::time::Instant;
+
+    static mut TIME_OPTIONS: Option<TimeOptions> = None;
+    static mut ALG_ED25519: Option<Renamed<Ed25519>> = None;
+
+    /// Custom claims encoded in the token.
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    struct CustomClaims {
+        /// `sub` is a standard claim which denotes claim subject:
+        /// https://tools.ietf.org/html/rfc7519#section-4.1.2
+        #[serde(rename = "sub")]
+        subject: String,
+    }
 
     #[no_mangle]
     pub extern "C" fn Java_io_mosip_greetings_Conversation_init(_env: JNIEnv, _class: JClass) {
@@ -43,9 +61,17 @@ mod android {
                 .with_tag("RUST-LAYER"),
         );
 
+        // libsodium init
         unsafe {
             let r = libsodium_sys::sodium_init();
             dbg!(r);
+        }
+
+        // jwt_compact init
+        unsafe {
+            // unsafe is needed as static mut can cause race conditions
+            TIME_OPTIONS = Some(TimeOptions::default());
+            ALG_ED25519 = Some(Ed25519::with_specific_name());
         }
     }
 
@@ -59,7 +85,6 @@ mod android {
         input: JString,
     ) -> jstring {
         log::info!("{}", format!("inside greet"));
-
 
         // debug!("this is a debug {}", "message");
         // First, we have to get the string out of Java. Check out the `strings`
@@ -81,14 +106,15 @@ mod android {
         output.into_raw()
     }
 
-    // encrypt & decrypt a dynamic string 
+    // encrypt & decrypt a dynamic string
     #[no_mangle]
     pub extern "C" fn Java_io_mosip_greetings_Conversation_encrypt(
         env: JNIEnv,
         _class: JClass,
         receiver_public_key: jbyteArray,
         sender_private_key: jbyteArray,
-        data: JString) -> jbyteArray {
+        data: JString,
+    ) -> jbyteArray {
         log::info!("{}", format!("encyrpt func start"));
         let java_data: String = env.get_string(data).expect("expected string data").into();
         log::info!("{}", format!("data from java: {:?}", java_data));
@@ -100,7 +126,10 @@ mod android {
         log::info!("{}", format!("priv key from java: {:?}", priv_key));
 
         let mut cipher_text: Vec<u8> = Vec::new();
-        cipher_text.resize_with((libsodium_sys::crypto_box_MACBYTES + java_data.len() as u32) as usize, Default::default);
+        cipher_text.resize_with(
+            (libsodium_sys::crypto_box_MACBYTES + java_data.len() as u32) as usize,
+            Default::default,
+        );
 
         libsodium_encrypt(java_data, pub_key, priv_key, &mut cipher_text);
 
@@ -108,23 +137,70 @@ mod android {
         env.byte_array_from_slice(&cipher_text).unwrap()
     }
 
-    fn libsodium_encrypt(text: String, pub_key: Vec<u8>, priv_key: Vec<u8>, cipher_text: &mut Vec<u8>) {
+    fn libsodium_encrypt(
+        text: String,
+        pub_key: Vec<u8>,
+        priv_key: Vec<u8>,
+        cipher_text: &mut Vec<u8>,
+    ) {
         let text_ptr: *const u8 = text.as_ptr();
 
-        // let mut cipher_text = [0; (libsodium_sys::crypto_box_MACBYTES + TEXT.len() as u32) as usize];
         let cipher_text_ptr: *mut u8 = cipher_text.as_mut_ptr();
-        
-        let nonce = [0;libsodium_sys::crypto_box_NONCEBYTES as usize];
+
+        let nonce = [0; libsodium_sys::crypto_box_NONCEBYTES as usize];
         let nonce_ptr: *const u8 = nonce.as_ptr();
 
         let pub_key_ptr = pub_key.as_ptr();
         let priv_key_ptr = priv_key.as_ptr();
-        
+
         unsafe {
-            let r = libsodium_sys::crypto_box_easy(cipher_text_ptr, text_ptr, text.len() as u64, nonce_ptr, pub_key_ptr, priv_key_ptr);
+            let r = libsodium_sys::crypto_box_easy(
+                cipher_text_ptr,
+                text_ptr,
+                text.len() as u64,
+                nonce_ptr,
+                pub_key_ptr,
+                priv_key_ptr,
+            );
             log::info!("{}", format!("crypto operation: {:?}", r));
         }
     }
     // JWT sign & verification of dynamic string
+    #[no_mangle]
+    pub extern "C" fn Java_io_mosip_greetings_Conversation_jwtsign(
+        env: JNIEnv,
+        _class: JClass,
+        private_key: jbyteArray,
+        claims_subject: JString,
+    ) -> jstring {
+        let priv_key = env.convert_byte_array(private_key).unwrap();
 
+        let now = Instant::now();
+
+        // TODO: This header can be passed from higher layer
+        let hdr = Header::default().with_key_id("test-key");
+
+        let subject = env
+            .get_string(claims_subject)
+            .expect("expected string data")
+            .into();
+        let custom_claims = CustomClaims { subject: subject };
+
+        let claims = Claims::new(custom_claims)
+            .set_duration_and_issuance(unsafe { &TIME_OPTIONS.unwrap() }, Duration::days(7))
+            .set_not_before(Utc::now() - Duration::hours(1));
+
+        let edSecretKey = SecretKey::from_slice(priv_key.as_slice()).unwrap();
+        let token_string = unsafe { ALG_ED25519.unwrap() }
+            .token(hdr, &claims, &edSecretKey)
+            .expect("unable to create token");
+        println!(
+            "ED25519 JWT token generation in ns: {}",
+            now.elapsed().as_nanos()
+        );
+        println!("JWT token created with claims: {}", token_string);
+
+        let jni_token_string: JNIString = token_string.into();
+        env.new_string(jni_token_string).unwrap().into_raw()
+    }
 }
