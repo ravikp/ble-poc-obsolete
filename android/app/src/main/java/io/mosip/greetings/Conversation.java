@@ -6,8 +6,8 @@ public class Conversation {
     private native String greet(String input);
 
     private native byte[] encrypt(byte[] receiver_pub_key, byte[] sender_priv_key, String data);
-//    private native byte[] decrypt(byte[] receiver_sec_key, byte[] sender_pub_key);
     private native String jwtsign(byte[] private_key, String claims_subject);
+    private native boolean jwtverify(byte[] public_key, String token);
 
     public String callNativeOp() {
         return greet(Calendar.getInstance().getTime().toString());
@@ -17,12 +17,12 @@ public class Conversation {
         return encrypt(receiverPubKey, senderPrivateKey, data);
     }
 
-//    public byte[] callNativeDecrypt(byte[] senderPubKey, byte[] receiverPrivKey) {
-//        return decrypt(senderPubKey, receiverPrivKey);
-//    }
-
     public String callNativeJWTSign(byte[] privKey, String subData) {
         return jwtsign(privKey, subData);
+    }
+
+    public boolean callNativeJWTVerify(byte[] pubKey, String token) {
+        return jwtverify(pubKey, token);
     }
 
     public static native void init();

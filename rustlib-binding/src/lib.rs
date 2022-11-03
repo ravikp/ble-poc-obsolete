@@ -29,6 +29,7 @@ pub unsafe extern "C" fn hello_release(item: *mut c_char) {
 #[allow(non_snake_case)]
 mod android {
     use chrono::{Duration, Utc};
+    use jni_sys::jboolean;
     use core::slice::{self};
     use jni::objects::{AutoArray, JClass, JString, ReleaseMode};
     use jni::strings::JNIString;
@@ -36,7 +37,7 @@ mod android {
     use jni::sys::jstring;
     use jni::JNIEnv;
 
-    use ed25519_compact::SecretKey;
+    use ed25519_compact::{SecretKey, PublicKey};
     use jwt_compact::{alg::Ed25519, prelude::*, Renamed, TimeOptions};
     use serde::{Deserialize, Serialize};
     use std::time::Instant;
@@ -191,6 +192,7 @@ mod android {
             .set_not_before(Utc::now() - Duration::hours(1));
 
         let edSecretKey = SecretKey::from_slice(priv_key.as_slice()).unwrap();
+
         let token_string = unsafe { ALG_ED25519.unwrap() }
             .token(hdr, &claims, &edSecretKey)
             .expect("unable to create token");
@@ -202,5 +204,26 @@ mod android {
 
         let jni_token_string: JNIString = token_string.into();
         env.new_string(jni_token_string).unwrap().into_raw()
+    }
+
+    #[no_mangle]
+    pub extern "C" fn Java_io_mosip_greetings_Conversation_jwtverify(
+        env: JNIEnv,
+        _class: JClass,
+        public_key: jbyteArray,
+        token: JString,
+    ) -> jboolean {
+        let token_string: String = env.get_string(token).expect("expected string token").into();
+        let pub_key = env.convert_byte_array(public_key).unwrap();
+        let edPublicKey = PublicKey::from_slice(pub_key.as_slice()).unwrap();
+
+        let un_trusted_token = UntrustedToken::new(&token_string).expect("parsing JWT token failed");
+        let token: Token<CustomClaims> = unsafe {ALG_ED25519.unwrap()}.validate_integrity(&un_trusted_token, &edPublicKey).expect("JWT integrity verification failed");
+        token.claims().validate_expiration(&unsafe {
+            TIME_OPTIONS.unwrap()
+        }).expect("invalid expiry").validate_maturity(&unsafe {
+            TIME_OPTIONS.unwrap()
+        }).expect("invalid maturity");
+        1
     }
 }
