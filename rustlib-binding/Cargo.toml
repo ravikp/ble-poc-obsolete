@@ -7,7 +7,6 @@ edition = "2021"
 
 [lib]
 name = "rustylib_binding"
-
 # this is needed to build for iOS and Android. flapigen requires cdylib
 crate-type = ["staticlib", "cdylib"]
 
@@ -26,6 +25,9 @@ log = "0.4.6"
 log-panics = "2.0"
 jni-sys = "0.3.0"
 
+uniffi_macros = "0.21.0" #when you change uniffi version change all of them in one shot
+uniffi = "0.21.0"
+
 [build-dependencies]
-flapigen = "0.6.0-pre13"
 env_logger = "0.9"
+uniffi_build = "0.21.0"

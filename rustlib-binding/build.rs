@@ -1,30 +1,12 @@
-use flapigen::{JavaConfig, LanguageConfig};
-use std::{env, path::Path};
+use std::{path::Path};
 
 fn main() {
-    env_logger::init();
-    let out_dir = env::var("OUT_DIR").unwrap();
-    let in_src = Path::new("src").join("java_glue.rs.in");
-    let out_src = Path::new(&out_dir).join("java_glue.rs");
-    //ANCHOR: config
-    let swig_gen = flapigen::Generator::new(LanguageConfig::JavaConfig(
-        JavaConfig::new(
-            Path::new("output")
-                .join("java_files")
-                .join("src")
-                .join("main")
-                .join("java")
-                .join("io")
-                .join("mosip"),
-            "io.mosip".into(),
-        )
-        .use_null_annotation_from_package("android.support.annotation".into()),
-    ))
-    .rustfmt_bindings(true);
-    //ANCHOR_END: config
-    swig_gen.expand("android bindings", &in_src, &out_src);
+    let identity_dsl = "./src/identity.udl";
+
+    uniffi_build::generate_scaffolding(identity_dsl).unwrap();
+
+    println!("cargo:rerun-if-changed={}", identity_dsl);
     println!("cargo:rustc-link-search={}", create_tmp_libgcc());
-    println!("cargo:rerun-if-changed={}", in_src.display());
 }
 
 // Rust (1.56 as of writing) still requires libgcc during linking, but this does

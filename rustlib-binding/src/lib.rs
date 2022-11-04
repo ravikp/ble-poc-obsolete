@@ -1,6 +1,9 @@
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 
+
+uniffi_macros::include_scaffolding!("identity");
+
 //////////////////// For iOS ////////////////////////
 
 #[no_mangle]
@@ -67,10 +70,14 @@ mod android {
         // Then we have to create a new Java string to return. Again, more info
         // in the `strings` module.
         let output = env
-            .new_string(format!("From Rust: Hello, {}!", input))
+            .new_string(format!("From2 Rust: Hello, {}!", input))
             .expect("Couldn't create java string!");
 
         // Finally, extract the raw pointer to return.
         output.into_raw()
     }
+}
+
+fn sprinkle(input: String) -> String {
+    format!("MSG from G0D: From sprinkle...{}", input)
 }
