@@ -47,7 +47,7 @@ build_android_shared_lib_aarch64:
 	cargo build --target aarch64-linux-android --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 build_android_shared_lib_armv7:
-	# cargo build --target armv7-linux-androideabi  --manifest-path=$(shared_lib_dir)/Cargo.toml
+	cargo build --target armv7-linux-androideabi  --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 build_android_shared_lib_i686:
 	cargo build --target i686-linux-android  --manifest-path=$(shared_lib_dir)/Cargo.toml
