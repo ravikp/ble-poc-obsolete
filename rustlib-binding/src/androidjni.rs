@@ -77,7 +77,7 @@ pub mod android {
             .expect("Couldn't create java string!");
 
         // Finally, extract the raw pointer to return.
-        output.into_raw()
+        output.into_inner()
     }
 
     // encrypt & decrypt a dynamic string
@@ -176,7 +176,7 @@ pub mod android {
         println!("JWT token created with claims: {}", token_string);
 
         let jni_token_string: JNIString = token_string.into();
-        env.new_string(jni_token_string).unwrap().into_raw()
+        env.new_string(jni_token_string).unwrap().into_inner()
     }
 
     #[no_mangle]
@@ -203,4 +203,110 @@ pub mod android {
             .expect("invalid maturity");
         1
     }
+
+    use btleplug::api::{
+        bleuuid::uuid_from_u16, Central, Manager as _, Peripheral as _, ScanFilter, WriteType,
+    };
+    use btleplug::platform::{Adapter, Manager, Peripheral};
+    use rand::{thread_rng, Rng};
+    use std::error::Error;
+    use std::io::Read;
+    use std::thread;
+    use std::time::Duration as Dur;
+    use tokio::time;
+    use uuid::Uuid;
+    
+    const BATTERY_LEVEL_CHARACTERISTIC_UUID: Uuid = uuid_from_u16(0x2A19);
+    const MODEL_NUMBER_STRING_CHARACTERISTIC_UUID: Uuid = uuid_from_u16(0x2A24);
+
+    #[no_mangle]
+    pub extern "C" fn Java_io_mosip_greetings_Conversation_bluetooth(
+        env: JNIEnv,
+        _class: JClass
+    ) {
+        btleplug::platform::init(&env);
+        scan_print().unwrap();
+    }
+
+    #[tokio::main]
+    async fn scan_print() -> Result<(), Box<dyn Error>> {
+        let manager = Manager::new().await.unwrap();
+    
+        // get the first bluetooth adapter
+        log::info!("{}", format!("listing adapters started"));
+        let adapters = manager.adapters().await?;
+        log::info!("{}", format!("listed adapters: {:?}", adapters));
+        let central = adapters.into_iter().nth(0).unwrap();
+    
+        log::info!("{}", format!("picked up first central from list"));
+        // start scanning for devices
+        central.start_scan(ScanFilter::default()).await?;
+        log::info!("{}", format!("started scanning on central"));
+    
+        // instead of waiting, you can use central.events() to get a stream which will
+        // notify you of new devices, for an example of that see examples/event_driven_discovery.rs
+        time::sleep(Dur::from_secs(5)).await;
+    
+        // find the device we're interested in
+        let ipad = find_ipad(&central).await.unwrap();
+    
+        // connect to the device
+        ipad.connect().await?;
+    
+        // discover services and characteristics
+        ipad.discover_services().await?;
+    
+        // find the characteristic we want
+        let chars = ipad.characteristics();
+        chars.iter().for_each(|c| {
+            log::info!("{}", format!("uuid: {}", c.uuid.to_string()));
+            log::info!("{}", format!("service_uuid: {}", c.service_uuid.to_string()));
+            log::info!("{}", format!("props: {:?}", c.properties));
+        });
+        
+        let cmd_char = chars
+            .iter()
+            .find(|c| c.uuid == BATTERY_LEVEL_CHARACTERISTIC_UUID)
+            .unwrap();
+    
+        let res = ipad.read(cmd_char).await?;
+        log::info!("{}", format!("battery status: {:?}", res));
+        
+        let cmd_char = chars
+        .iter()
+        .find(|c| c.uuid == MODEL_NUMBER_STRING_CHARACTERISTIC_UUID)
+        .unwrap();
+    
+        let res = ipad.read(cmd_char).await?;
+        log::info!("{}", format!("model number string: {:?}", res));
+        log::info!("{}", format!("model number string: {}", String::from_utf8_lossy(&res)));
+    
+    
+        // dance party
+        // let mut rng = thread_rng();
+        // for _ in 0..20 {
+        //     let color_cmd = vec![0x56, rng.gen(), rng.gen(), rng.gen(), 0x00, 0xF0, 0xAA];
+        //     ipad
+        //         .write(&cmd_char, &color_cmd, WriteType::WithoutResponse)
+        //         .await?;
+        //     time::sleep(Duration::from_millis(200)).await;
+        // }
+        Ok(())
+    }
+    
+    async fn find_ipad(central: &Adapter) -> Option<Peripheral> {
+        for p in central.peripherals().await.unwrap() {
+            let peripheral_name = p.properties()
+                .await
+                .unwrap()
+                .unwrap()
+                .local_name;
+            log::info!("{}", format!("scanned peripheral: {:?}", peripheral_name));
+    
+            if peripheral_name.iter().any(|name| name.contains("iPad")) {
+                return Some(p);
+            }
+        }
+        None
+    }    
 }

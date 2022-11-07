@@ -8,6 +8,7 @@ public class Conversation {
     private native byte[] encrypt(byte[] receiver_pub_key, byte[] sender_priv_key, String data);
     private native String jwtsign(byte[] private_key, String claims_subject);
     private native boolean jwtverify(byte[] public_key, String token);
+    private native void bluetooth();
 
     public String callNativeOp() {
         return greet(Calendar.getInstance().getTime().toString());
@@ -23,6 +24,10 @@ public class Conversation {
 
     public boolean callNativeJWTVerify(byte[] pubKey, String token) {
         return jwtverify(pubKey, token);
+    }
+
+    public void callBluetooth() {
+        bluetooth();
     }
 
     public static native void init();

@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         val isValid = conversation.callNativeJWTVerify(ed25519PubKey, jwtToken)
         println(isValid)
 
+        conversation.callBluetooth();
+
         findViewById<TextView>(R.id.greetingField).let {
             it?.text = "Text from rust " + conversation.callNativeOp()
         }
