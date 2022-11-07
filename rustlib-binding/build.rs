@@ -2,10 +2,9 @@ use std::{path::Path};
 
 fn main() {
     let identity_dsl = "./src/identity.udl";
-
     uniffi_build::generate_scaffolding(identity_dsl).unwrap();
-
     println!("cargo:rerun-if-changed={}", identity_dsl);
+
     println!("cargo:rustc-link-search={}", create_tmp_libgcc());
 }
 

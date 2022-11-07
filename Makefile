@@ -47,7 +47,7 @@ build_android_shared_lib_aarch64:
 	cargo build --target aarch64-linux-android --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 build_android_shared_lib_armv7:
-	cargo build --target armv7-linux-androideabi  --manifest-path=$(shared_lib_dir)/Cargo.toml
+	# cargo build --target armv7-linux-androideabi  --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 build_android_shared_lib_i686:
 	cargo build --target i686-linux-android  --manifest-path=$(shared_lib_dir)/Cargo.toml
@@ -57,7 +57,7 @@ build_android_shared_lib: generate_kotlin_bindings build_android_shared_lib_x86_
 build_ios_shared_lib: generate_swift_bindings
 	cargo build --manifest-path=$(shared_lib_dir)/Cargo.toml
 	cbindgen $(shared_lib_dir)/src/lib.rs -l c > $(shared_lib_generated_headers)/rustylib.h
-	cargo lipo --manifest-path=$(shared_lib_dir)/Cargo.toml
+	cargo lipo --targets x86_64-apple-ios,aarch64-apple-ios --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 copy_shared_to_ios: build_ios_shared_lib _copy_shared_to_ios
 copy_shared_to_android: build_android_shared_lib _copy_shared_to_android
