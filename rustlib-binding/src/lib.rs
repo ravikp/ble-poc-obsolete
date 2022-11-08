@@ -1,5 +1,4 @@
 pub mod androidjni;
-pub mod ios;
 
 uniffi_macros::include_scaffolding!("identity");
 

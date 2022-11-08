@@ -59,7 +59,6 @@ build_android_shared_lib_i686:
 build_android_shared_lib: generate_kotlin_bindings build_android_shared_lib_x86_64 build_android_shared_lib_armv7 build_android_shared_lib_aarch64
 
 build_ios_shared_lib: generate_swift_bindings
-	cbindgen $(shared_lib_dir)/src/ios.rs -l c > $(shared_lib_generated_headers)/rustylib.h
 	cargo lipo --targets x86_64-apple-ios,aarch64-apple-ios --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 copy_shared_to_ios: build_ios_shared_lib _copy_shared_to_ios
