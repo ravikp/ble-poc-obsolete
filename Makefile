@@ -71,7 +71,6 @@ generate_swift_bindings:
 	uniffi-bindgen generate --language swift --config $(shared_lib_dir)/uniffi.toml --out-dir $(shared_lib_output_dir)/swift $(shared_lib_dir)/src/identity.udl
 
 _copy_shared_to_ios:
-	cp -f $(shared_lib_generated_headers)/* $(ios_inc_dir)
 	cp -f $(shared_lib_output_dir)/swift/*.h $(ios_inc_dir)
 	cp -f $(shared_lib_output_dir)/swift/*.swift $(ios_generated_src_dir)
 	cp -f $(shared_lib_dir)/target/universal/debug/librustylib_binding.a $(shared_lib_ios_output)
