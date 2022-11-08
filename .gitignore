@@ -1,5 +1,6 @@
 ios/include/
 ios/libs/
+ios/generated/
 android/app/src/main/jniLibs
 purerust/target/debug/**/*
 purerust/target
