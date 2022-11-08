@@ -1,11 +1,14 @@
 package io.mosip.greetings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
+import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +46,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+        Timer().schedule(500) { moveToChatActivity() }
         println("Waiting for central to connect")
+    }
+
+    private fun moveToChatActivity() {
+            val intent = Intent(this@MainActivity, ChatActivity::class.java)
+            startActivity(intent)
     }
 
     private fun stopBroadCasting() {
@@ -76,6 +86,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        Timer().schedule(500) { moveToChatActivity() }
         println("Starting Scan")
     }
 
