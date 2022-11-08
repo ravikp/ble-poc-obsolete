@@ -1,42 +1,93 @@
 package io.mosip.greetings
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
-import uniffi.identity.sprinkle
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        val conversation = Conversation()
-//
-//        // key pair 1 (customer)
-//        val privateKeyOfCustomer = listOf(0x2e,  0x4e,  0x33,  0x6a,  0xe3,  0x89,  0x21,  0x92,  0x16,  0xc8,  0x3,  0xd9,  0x99,  0x59,  0x29,  0xf2,  0x35,  0xc4,  0x72,  0x8e,  0x21,  0x31,  0xff,  0x68,  0xbe,  0x8e,  0xaf,  0x1,  0x47,  0x6a,  0xf0,  0x7c).map { it.toByte() }.toByteArray()
-//        val publicKeyOfCustomer = listOf(0x43,  0x83,  0x1f,  0xc0,  0x4e,  0xda,  0xfb,  0xa4,  0x60,  0x9d,  0xab,  0x2,  0x7a,  0x87,  0x2,  0x8a,  0xbf,  0x24,  0x98,  0xa2,  0x3b,  0x92,  0x47,  0x7d,  0x31,  0x7,  0x8e,  0x70,  0x74,  0x72,  0x2e,  0x68).map { it.toByte() }.toByteArray()
-//
-//        // key pair 2 (agent)
-//        val privateKeyOfAgent = listOf(0xe4,  0x15,  0xad,  0x24,  0xc9,  0x70,  0xf8,  0xca,  0x24,  0x4e,  0xc3,  0x3e,  0xb5,  0x7e,  0x96,  0x82,  0x37,  0x32,  0xcb,  0xf,  0x63,  0x2e,  0x69,  0x91,  0xf5,  0x11,  0x51,  0xb1,  0xe2,  0x87,  0xf2,  0xf1).map { it.toByte() }.toByteArray()
-//        val publicKeyOfAgent = listOf(0xea,  0xf4,  0xa1,  0x9b,  0xc6,  0xc9,  0xbe,  0x97,  0xc1,  0x3e,  0x52,  0x2f,  0xa3,  0xbc,  0xa8,  0x7c,  0xca,  0x45,  0xe7,  0x68,  0xab,  0x9e,  0xbf,  0xf1,  0x66,  0x9d,  0x33,  0xa3,  0x2b,  0x57,  0x4b,  0x14).map { it.toByte() }.toByteArray()
-//
-//        val encryptedData = conversation.callNativeEncrypt(publicKeyOfAgent, privateKeyOfCustomer, "Test from kotlin")
-//
-//        encryptedData.forEach {
-//            println("The element is $it")
-//        }
-//
-//        // ED25519 keys
-//        val ed25519PrivKey = listOf(0xb0,  0xf8,  0x98,  0x2,  0x79,  0xd4,  0xdf,  0x9f,  0x38,  0x3b,  0xfd,  0x6e,  0x99,  0xb,  0x45,  0xc5,  0xfc,  0xba,  0x1c,  0x4f,  0xbe,  0xf7,  0x6c,  0x27,  0xb9,  0x14,  0x1d,  0xff,  0x50,  0xb9,  0x79,  0x83,  0xfc,  0x6d,  0xef,  0x9c,  0x21,  0x16,  0x17,  0x4,  0x51,  0xbc,  0xf2,  0xc2,  0x76,  0x3f,  0xa9,  0x16,  0x96,  0xd1,  0x21,  0x49,  0x17,  0x59,  0x91,  0xf2,  0x26,  0xb3,  0x4d,  0xdb,  0xe2,  0x32,  0xe1,  0xa7).map { it.toByte() }.toByteArray()
-//        val ed25519PubKey = listOf(0xfc,  0x6d,  0xef,  0x9c,  0x21,  0x16,  0x17,  0x4,  0x51,  0xbc,  0xf2,  0xc2,  0x76,  0x3f,  0xa9,  0x16,  0x96,  0xd1,  0x21,  0x49,  0x17,  0x59,  0x91,  0xf2,  0x26,  0xb3,  0x4d,  0xdb,  0xe2,  0x32,  0xe1,  0xa7).map { it.toByte() }.toByteArray()
-//        val jwtToken = conversation.callNativeJWTSign(ed25519PrivKey, "sample subject data for signing")
-//        println(jwtToken)
-//
-//        val isValid = conversation.callNativeJWTVerify(ed25519PubKey, jwtToken)
-//        println(isValid)
-
-        findViewById<TextView>(R.id.greetingField).let {
-            it?.text = sprinkle("Text2 from rust ")
+        findViewById<Button>(R.id.centralButton).let {
+            it?.setOnClickListener {
+                this.startScanningForPeripheral()
+            }
         }
+
+        findViewById<Button>(R.id.peripheralButton).let {
+            it?.setOnClickListener {
+                this.startBroadCasting()
+            }
+        }
+    }
+
+    private fun startBroadCasting() {
+        findViewById<LinearLayout>(R.id.actionsLayout).let {
+            it?.setVisibility(View.GONE)
+        }
+        findViewById<LinearLayout>(R.id.loaderLayout).let {
+            it?.setVisibility(View.VISIBLE)
+        }
+
+        findViewById<TextView>(R.id.loaderText).let {
+            it?.setText(getString(R.string.broadcastingMessage))
+        }
+
+        findViewById<Button>(R.id.cancelLoading).let {
+            it?.setOnClickListener {
+                this.stopBroadCasting()
+            }
+        }
+
+        println("Waiting for central to connect")
+    }
+
+    private fun stopBroadCasting() {
+        findViewById<LinearLayout>(R.id.loaderLayout).let {
+            it?.setVisibility(View.GONE)
+        }
+
+        findViewById<LinearLayout>(R.id.actionsLayout).let {
+            it?.setVisibility(View.VISIBLE)
+        }
+
+        println("Stopping broadcast")
+    }
+
+    private fun startScanningForPeripheral(){
+        findViewById<LinearLayout>(R.id.actionsLayout).let {
+            it?.setVisibility(View.GONE)
+        }
+        findViewById<LinearLayout>(R.id.loaderLayout).let {
+            it?.setVisibility(View.VISIBLE)
+        }
+
+        findViewById<TextView>(R.id.loaderText).let {
+            it?.setText(getString(R.string.ScanningMessage))
+        }
+
+        findViewById<Button>(R.id.cancelLoading).let {
+            it?.setOnClickListener {
+                this.stopScanningForPeripheral()
+            }
+        }
+
+        println("Starting Scan")
+    }
+
+    private fun stopScanningForPeripheral() {
+        findViewById<LinearLayout>(R.id.loaderLayout).let {
+            it?.setVisibility(View.GONE)
+        }
+
+        findViewById<LinearLayout>(R.id.actionsLayout).let {
+            it?.setVisibility(View.VISIBLE)
+        }
+
+        println("Stopping Scan")
     }
 }

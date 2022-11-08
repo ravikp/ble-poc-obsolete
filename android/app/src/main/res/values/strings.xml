@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Greetings</string>
+    <string name="app_name">MOSIP POC</string>
+    <string name="CENTRAL_BUTTON_NAME">Central</string>
+    <string name="PERIPHERAL_BUTTON_NAME">Peripheral</string>
+    <string name="ScanningMessage">Scanning for peripheral</string>
+    <string name="cancelButtonText">Cancel</string>
+    <string name="broadcastingMessage">Waiting for central to connect</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>
