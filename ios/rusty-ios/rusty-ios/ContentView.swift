@@ -27,8 +27,5 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 func getName() -> String {
-    let result = hello("Ravi kumar")
-    let sr = String(cString: result!)
-    hello_release(UnsafeMutablePointer(mutating: result))
-    return sr
+    return sprinkle(input: "Ravi")
 }

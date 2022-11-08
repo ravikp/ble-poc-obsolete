@@ -1,5 +1,6 @@
 ios_inc_dir=./ios/include
 ios_libs_dir=./ios/libs
+ios_generated_src_dir=./ios/generated
 
 shared_lib_dir=./rustlib-binding
 
@@ -16,7 +17,8 @@ android_app_src_main=$(android_root)/app/src/main
 android_jni_libs_dir=$(android_app_src_main)/jniLibs
 
 setup_dirs:
-	mkdir -p $(ios_inc_dir) $(ios_libs_dir) $(shared_lib_ios_output) $(shared_lib_android_output) $(shared_lib_generated_java_source_dir)
+	mkdir -p $(ios_inc_dir) $(ios_libs_dir) $(shared_lib_ios_output) $(ios_generated_src_dir)
+	mkdir -p $(shared_lib_android_output) $(shared_lib_generated_java_source_dir)
 	mkdir -p $(shared_lib_android_jni_output) $(shared_lib_generated_headers)
 	mkdir -p $(android_jni_libs_dir)/x86_64
 	mkdir -p $(android_jni_libs_dir)/armeabi-v7a
@@ -27,15 +29,17 @@ setup_tools:
 	cargo install uniffi_bindgen@0.21.0
 
 clean_dirs:
-	rm -rf $(ios_inc_dir) $(ios_libs_dir) $(shared_lib_output_dir) $(android_jni_libs_dir) $(shared_lib_uniffi_dir)
+	rm -rf $(ios_inc_dir) $(ios_libs_dir) $(shared_lib_output_dir) $(ios_generated_src_dir)
+	rm -rf $(android_jni_libs_dir) $(shared_lib_uniffi_dir)
 
 clean:
-	rm -rf $(ios_inc_dir)/**/* $(ios_libs_dir)/**/* $(shared_lib_ios_output)/**/* $(shared_lib_android_output)/**/* $(shared_lib_generated_java_source_dir)/**/*
-	rm -rf $(shared_lib_android_jni_output)/**/* $(shared_lib_generated_headers)/**/*
-	rm -rf $(android_jni_libs_dir)/x86_64/**/*
-	rm -rf $(android_jni_libs_dir)/armeabi-v7a/**/*
-	rm -rf $(android_jni_libs_dir)/arm64-v8a/**/*
-	rm -rf $(shared_lib_output_dir)/kotlin/**/* $(shared_lib_output_dir)/swift/**/*
+	rm -rf $(ios_inc_dir)/* $(ios_libs_dir)/* $(shared_lib_ios_output)/* $(ios_generated_src_dir)/*
+	rm -rf $(shared_lib_android_output)/* $(shared_lib_generated_java_source_dir)/*
+	rm -rf $(shared_lib_android_jni_output)/* $(shared_lib_generated_headers)/*
+	rm -rf $(android_jni_libs_dir)/x86_64/*
+	rm -rf $(android_jni_libs_dir)/armeabi-v7a/*
+	rm -rf $(android_jni_libs_dir)/arm64-v8a/*
+	rm -rf $(shared_lib_output_dir)/kotlin/* $(shared_lib_output_dir)/swift/*
 	cargo clean --manifest-path=$(shared_lib_dir)/Cargo.toml
 
 build: setup_dirs build_ios_shared_lib _copy_shared_to_ios build_android_shared_lib _copy_shared_to_android
@@ -69,6 +73,8 @@ generate_swift_bindings:
 
 _copy_shared_to_ios:
 	cp -f $(shared_lib_generated_headers)/* $(ios_inc_dir)
+	cp -f $(shared_lib_output_dir)/swift/*.h $(ios_inc_dir)
+	cp -f $(shared_lib_output_dir)/swift/*.swift $(ios_generated_src_dir)
 	cp -f $(shared_lib_dir)/target/universal/debug/librustylib_binding.a $(shared_lib_ios_output)
 	cp -f $(shared_lib_ios_output)/* $(ios_libs_dir)
 
