@@ -137,33 +137,11 @@
                                     <outlet property="delegate" destination="fAL-1c-sOi" id="5wn-Bt-gYe"/>
                                 </connections>
                             </textView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Advertising" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TRs-VS-YOG">
-                                <rect key="frame" x="20" y="732" width="85.666666666666671" height="20.666666666666629"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="WSD-Tt-7ua">
-                                <rect key="frame" x="306" y="726.66666666666663" width="51" height="31"/>
-                                <connections>
-                                    <action selector="switchChanged:" destination="fAL-1c-sOi" eventType="valueChanged" id="UjN-ZU-Wsj"/>
-                                </connections>
-                            </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tDD-N7-g8C"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="WSD-Tt-7ua" firstAttribute="centerY" secondItem="TRs-VS-YOG" secondAttribute="centerY" id="0p4-NW-FaA"/>
-                            <constraint firstItem="WSD-Tt-7ua" firstAttribute="centerY" secondItem="TRs-VS-YOG" secondAttribute="centerY" id="TCz-Yh-tag"/>
-                            <constraint firstItem="TRs-VS-YOG" firstAttribute="leading" secondItem="tDD-N7-g8C" secondAttribute="leading" constant="20" id="TQp-rQ-3xL"/>
-                            <constraint firstItem="tDD-N7-g8C" firstAttribute="trailing" secondItem="WSD-Tt-7ua" secondAttribute="trailing" constant="20" id="ZqR-6d-G31"/>
-                            <constraint firstItem="WSD-Tt-7ua" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TRs-VS-YOG" secondAttribute="trailing" constant="1" id="tQW-cI-2ad"/>
-                            <constraint firstItem="tDD-N7-g8C" firstAttribute="bottom" secondItem="TRs-VS-YOG" secondAttribute="bottom" constant="25.5" id="u8Y-FJ-WpS"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="advertisingSwitch" destination="WSD-Tt-7ua" id="p2w-6B-Ou9"/>
                         <outlet property="textView" destination="b4y-1z-Myd" id="F81-Ry-Zjo"/>
                     </connections>
                 </viewController>
