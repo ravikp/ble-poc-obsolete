@@ -11,20 +11,20 @@ import io.mosip.greetings.chat.ChatManager
 import java.util.*
 
 class Peripheral: ChatManager {
-    private val uuid = "AB29"
-    private val WRITE_MESSAGE_CHAR_UUID = UUIDHelper.uuidFromString("2031")
-    private val READ_MESSAGE_CHAR_UUID = UUIDHelper.uuidFromString("2032")
-    private lateinit var gattServer: BluetoothGattServer
+   private lateinit var gattServer: BluetoothGattServer
     private lateinit var bluetoothManager: BluetoothManager
     private lateinit var onConnect: () -> Unit
     private lateinit var onMessageReceived: (String) -> Unit
-    private val serviceUUID: UUID = UUIDHelper.uuidFromString(uuid)
+
     private var centralDevice: BluetoothDevice? = null
     var advertising: Boolean = false;
 
     companion object {
         @Volatile
         private lateinit var instance: Peripheral
+        val serviceUUID: UUID = UUIDHelper.uuidFromString("AB29")
+        val WRITE_MESSAGE_CHAR_UUID = UUIDHelper.uuidFromString("2031")
+        val READ_MESSAGE_CHAR_UUID = UUIDHelper.uuidFromString("2032")
 
         fun getInstance(): Peripheral {
             synchronized(this) {
@@ -35,6 +35,9 @@ class Peripheral: ChatManager {
             }
         }
     }
+
+    override val name: String
+        get() = "Peripheral"
 
     fun start(context: Context, onConnect: () -> Unit) {
         val bluetoothManager:BluetoothManager =
@@ -192,6 +195,5 @@ class Peripheral: ChatManager {
             Log.i("BLE", "Sent notification to device")
             gattServer.notifyCharacteristicChanged(centralDevice!!, output, false)
         }
-
     }
 }

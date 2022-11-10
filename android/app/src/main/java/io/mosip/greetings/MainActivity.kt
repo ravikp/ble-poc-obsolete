@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import io.mosip.greetings.ble.Central
 import io.mosip.greetings.chat.ChatActivity
 import io.mosip.greetings.ble.Common
 import io.mosip.greetings.ble.Peripheral
@@ -100,7 +101,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        Timer().schedule(500) { moveToChatActivity(ChatController.CENTRAL_MODE) }
+        val central = Central.getInstance()
+        central.startScanning(this) {
+            central.connect(this) {
+                moveToChatActivity(ChatController.CENTRAL_MODE)
+            }
+        }
+
         println("Starting Scan")
     }
 
@@ -113,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             it?.setVisibility(View.VISIBLE)
         }
 
+        Central.getInstance().stopScan()
         println("Stopping Scan")
     }
 }

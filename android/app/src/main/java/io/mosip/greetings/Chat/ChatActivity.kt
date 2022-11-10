@@ -24,9 +24,8 @@ class ChatActivity : AppCompatActivity() {
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = mAdapter
 
-
         val description = findViewById<TextView>(R.id.chatDescription)
-        description.text = "Talking to Central"
+        description.text = "Talking to " + chatManager.name
 
         chatManager.addMessageReceiver {
             mAdapter.addMessage(Message(it,  false))
