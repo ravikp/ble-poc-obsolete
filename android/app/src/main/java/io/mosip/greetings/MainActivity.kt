@@ -7,19 +7,15 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import io.mosip.greetings.Chat.ChatActivity
+import io.mosip.greetings.chat.ChatActivity
 import io.mosip.greetings.ble.Common
 import io.mosip.greetings.ble.Peripheral
+import io.mosip.greetings.chat.ChatController
 import java.util.*
 import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity() {
     private lateinit var peripheral: Peripheral
-
-    companion object {
-        private const val PERIPHERAL_MODE = 0
-        private const val CENTRAL_MODE = 1
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private fun startBroadCasting() {
         peripheral = Peripheral.getInstance();
         peripheral.start(this) {
-            moveToChatActivity(PERIPHERAL_MODE)
+            moveToChatActivity(ChatController.PERIPHERAL_MODE)
         }
 
         findViewById<LinearLayout>(R.id.actionsLayout).let {
@@ -104,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        Timer().schedule(500) { moveToChatActivity(CENTRAL_MODE) }
+        Timer().schedule(500) { moveToChatActivity(ChatController.CENTRAL_MODE) }
         println("Starting Scan")
     }
 

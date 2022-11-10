@@ -1,4 +1,4 @@
-package io.mosip.greetings.Chat
+package io.mosip.greetings.chat
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup

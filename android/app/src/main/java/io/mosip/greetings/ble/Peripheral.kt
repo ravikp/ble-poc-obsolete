@@ -7,10 +7,13 @@ import android.bluetooth.le.AdvertiseSettings
 import android.content.Context
 import android.os.ParcelUuid
 import android.util.Log
+import io.mosip.greetings.chat.ChatManager
 import java.util.*
 
-class Peripheral {
+class Peripheral: ChatManager {
     private val uuid = "AB29"
+    private val WRITE_MESSAGE_CHAR_UUID = UUIDHelper.uuidFromString("2031")
+    private val READ_MESSAGE_CHAR_UUID = UUIDHelper.uuidFromString("2032")
     private lateinit var gattServer: BluetoothGattServer
     private lateinit var bluetoothManager: BluetoothManager
     private lateinit var onConnect: () -> Unit
@@ -52,11 +55,10 @@ class Peripheral {
     }
 
     private fun advertiseData(service: BluetoothGattService): AdvertiseData? {
-        val data = AdvertiseData.Builder()
+        return AdvertiseData.Builder()
             .setIncludeDeviceName(true)
             .addServiceUuid(ParcelUuid(service.uuid))
             .build()
-        return data
     }
 
     private fun advertiseSettings(): AdvertiseSettings? {
@@ -74,13 +76,22 @@ class Peripheral {
             BluetoothGattService.SERVICE_TYPE_PRIMARY
         )
 
-        val char = BluetoothGattCharacteristic(
-            UUIDHelper.uuidFromString("2031"),
+        val writeChar = BluetoothGattCharacteristic(
+            WRITE_MESSAGE_CHAR_UUID,
             BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE,
             BluetoothGattCharacteristic.PERMISSION_WRITE
         )
-        service.addCharacteristic(char)
+
+        val readChar = BluetoothGattCharacteristic(
+            READ_MESSAGE_CHAR_UUID,
+            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_INDICATE,
+            BluetoothGattCharacteristic.PERMISSION_READ
+        )
+
+        service.addCharacteristic(writeChar)
+        service.addCharacteristic(readChar)
         gattServer.addService(service)
+
         return service
     }
 
@@ -132,7 +143,7 @@ class Peripheral {
                 requestId,
                 BluetoothGatt.GATT_SUCCESS,
                 offset,
-                null
+                characteristic.value
             )
         }
         override fun onConnectionStateChange(device: BluetoothDevice?, status: Int, newState: Int) {
@@ -166,7 +177,21 @@ class Peripheral {
         }
     }
 
-    fun addMessageReceiver(onMessageReceived: (String) -> Unit) {
+    override fun addMessageReceiver(onMessageReceived: (String) -> Unit) {
         this.onMessageReceived = onMessageReceived
+    }
+
+    override fun sendMessage(message: String) {
+        val output = gattServer
+            .getService(serviceUUID)
+            .getCharacteristic(READ_MESSAGE_CHAR_UUID)
+
+        output.setValue(message)
+
+        if(centralDevice != null) {
+            Log.i("BLE", "Sent notification to device")
+            gattServer.notifyCharacteristicChanged(centralDevice!!, output, false)
+        }
+
     }
 }

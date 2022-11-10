@@ -22,7 +22,7 @@
         tools:ignore="HardcodedDebugMode"
         tools:targetApi="31" >
         <activity
-            android:name=".Chat.ChatActivity"
+            android:name=".chat.ChatActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
