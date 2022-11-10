@@ -9,14 +9,29 @@ import android.os.ParcelUuid
 import android.util.Log
 import java.util.*
 
-
-class Peripheral(uuid: String) {
+class Peripheral {
+    private val uuid = "AB29"
     private lateinit var gattServer: BluetoothGattServer
     private lateinit var bluetoothManager: BluetoothManager
     private lateinit var onConnect: () -> Unit
+    private lateinit var onMessageReceived: (String) -> Unit
     private val serviceUUID: UUID = UUIDHelper.uuidFromString(uuid)
     private var centralDevice: BluetoothDevice? = null
     var advertising: Boolean = false;
+
+    companion object {
+        @Volatile
+        private lateinit var instance: Peripheral
+
+        fun getInstance(): Peripheral {
+            synchronized(this) {
+                if (!::instance.isInitialized) {
+                    instance = Peripheral()
+                }
+                return instance
+            }
+        }
+    }
 
     fun start(context: Context, onConnect: () -> Unit) {
         val bluetoothManager:BluetoothManager =
@@ -61,8 +76,8 @@ class Peripheral(uuid: String) {
 
         val char = BluetoothGattCharacteristic(
             UUIDHelper.uuidFromString("2031"),
-            BluetoothGattCharacteristic.PROPERTY_READ,
-            BluetoothGattCharacteristic.PERMISSION_READ
+            BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE,
+            BluetoothGattCharacteristic.PERMISSION_WRITE
         )
         service.addCharacteristic(char)
         gattServer.addService(service)
@@ -94,7 +109,16 @@ class Peripheral(uuid: String) {
                     value
                 )
             )
+
+            if(value != null) {
+                 onMessageReceived(String(value))
+            }
+
+            if(responseNeeded) {
+                gattServer.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, 0, null);
+            }
         }
+
         override fun onCharacteristicReadRequest(
             device: BluetoothDevice?,
             requestId: Int,
@@ -126,6 +150,7 @@ class Peripheral(uuid: String) {
             }
         }
     }
+
     private val advertisingCallback = object: AdvertiseCallback(){
         override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
             super.onStartSuccess(settingsInEffect)
@@ -139,5 +164,9 @@ class Peripheral(uuid: String) {
             super.onStartFailure(errorCode)
             Log.e("RNBLEModule", "Advertising onStartFailure: $errorCode");
         }
+    }
+
+    fun addMessageReceiver(onMessageReceived: (String) -> Unit) {
+        this.onMessageReceived = onMessageReceived
     }
 }

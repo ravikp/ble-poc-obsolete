@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Common.init(this@MainActivity,this)
+        Common.init(this@MainActivity, this)
         Common.startBluetooth(this@MainActivity)
 
         setContentView(R.layout.activity_main)
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startBroadCasting() {
-        peripheral = Peripheral( "A392")
+        peripheral = Peripheral.getInstance();
         peripheral.start(this) {
             moveToChatActivity(PERIPHERAL_MODE)
         }
@@ -69,9 +69,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun moveToChatActivity(mode: Int) {
-            val intent = Intent(this@MainActivity, ChatActivity::class.java)
-            intent.putExtra("mode", mode)
-            startActivity(intent)
+        val intent = Intent(this@MainActivity, ChatActivity::class.java)
+        intent.putExtra("mode", mode)
+        startActivity(intent)
     }
 
     private fun stopBroadCasting() {
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         println("Stopping broadcast")
     }
 
-    private fun startScanningForPeripheral(){
+    private fun startScanningForPeripheral() {
         findViewById<LinearLayout>(R.id.actionsLayout).let {
             it?.setVisibility(View.GONE)
         }
