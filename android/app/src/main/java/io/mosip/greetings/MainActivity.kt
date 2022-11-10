@@ -14,6 +14,13 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var peripheral: Peripheral
+
+    companion object {
+        private const val PERIPHERAL_MODE = 0
+        private const val CENTRAL_MODE = 1
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,8 +43,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startBroadCasting() {
-        val peripheral = Peripheral(this, "A392")
-        peripheral.start()
+        peripheral = Peripheral( "A392")
+        peripheral.start(this) {
+            moveToChatActivity(PERIPHERAL_MODE)
+        }
 
         findViewById<LinearLayout>(R.id.actionsLayout).let {
             it?.setVisibility(View.GONE)
@@ -56,13 +65,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-//        Timer().schedule(500) { moveToChatActivity() }
         println("Waiting for central to connect")
     }
 
-    private fun moveToChatActivity() {
+    private fun moveToChatActivity(mode: Int) {
             val intent = Intent(this@MainActivity, ChatActivity::class.java)
+            intent.putExtra("mode", mode)
             startActivity(intent)
     }
 
@@ -96,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        Timer().schedule(500) { moveToChatActivity() }
+        Timer().schedule(500) { moveToChatActivity(CENTRAL_MODE) }
         println("Starting Scan")
     }
 

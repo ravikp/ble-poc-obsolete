@@ -10,21 +10,66 @@ import android.util.Log
 import java.util.*
 
 
-class Peripheral(context: Context, uuid: String) {
+class Peripheral(uuid: String) {
+    private lateinit var gattServer: BluetoothGattServer
+    private lateinit var bluetoothManager: BluetoothManager
+    private lateinit var onConnect: () -> Unit
     private val serviceUUID: UUID = UUIDHelper.uuidFromString(uuid)
-    private val mBluetoothDevices: HashSet<BluetoothDevice> = HashSet();
+    private var centralDevice: BluetoothDevice? = null
     var advertising: Boolean = false;
 
-    //BLE
-    private val service: BluetoothGattService= BluetoothGattService(
+    fun start(context: Context, onConnect: () -> Unit) {
+        val bluetoothManager:BluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val mBluetoothAdapter = bluetoothManager.adapter
+        val advertiser = mBluetoothAdapter.bluetoothLeAdvertiser
+
+        gattServer = bluetoothManager.openGattServer(context, gattServerCallback)
+
+        val service = getService()
+        val settings = advertiseSettings()
+        val data = advertiseData(service)
+        this.onConnect = onConnect;
+
+        advertiser.startAdvertising(settings, data, advertisingCallback);
+        Log.i("BLEPeripheral", "Started advertising: $data")
+
+    }
+
+    private fun advertiseData(service: BluetoothGattService): AdvertiseData? {
+        val data = AdvertiseData.Builder()
+            .setIncludeDeviceName(true)
+            .addServiceUuid(ParcelUuid(service.uuid))
+            .build()
+        return data
+    }
+
+    private fun advertiseSettings(): AdvertiseSettings? {
+        val settings = AdvertiseSettings.Builder()
+            .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
+            .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+            .setConnectable(true)
+            .build();
+        return settings
+    }
+
+    private fun getService(): BluetoothGattService {
+        val service = BluetoothGattService(
             serviceUUID,
             BluetoothGattService.SERVICE_TYPE_PRIMARY
         )
-    private val mBluetoothManager:BluetoothManager =
-        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private  val mBluetoothAdapter = mBluetoothManager.adapter
 
-    private val mGattServerCallback: BluetoothGattServerCallback = object : BluetoothGattServerCallback(){
+        val char = BluetoothGattCharacteristic(
+            UUIDHelper.uuidFromString("2031"),
+            BluetoothGattCharacteristic.PROPERTY_READ,
+            BluetoothGattCharacteristic.PERMISSION_READ
+        )
+        service.addCharacteristic(char)
+        gattServer.addService(service)
+        return service
+    }
+
+    private val gattServerCallback: BluetoothGattServerCallback = object : BluetoothGattServerCallback(){
         override fun onCharacteristicWriteRequest(
             device: BluetoothDevice?,
             requestId: Int,
@@ -58,7 +103,7 @@ class Peripheral(context: Context, uuid: String) {
         ) {
             super.onCharacteristicReadRequest(device, requestId, offset, characteristic)
             Log.d("BLE", "onCharacteristicReadRequest requestId=$requestId offset=$offset")
-            mGattServer.sendResponse(
+            gattServer.sendResponse(
                 device,
                 requestId,
                 BluetoothGatt.GATT_SUCCESS,
@@ -70,11 +115,12 @@ class Peripheral(context: Context, uuid: String) {
             super.onConnectionStateChange(device, status, newState)
 
             if(newState == BluetoothProfile.STATE_CONNECTED){
-            Log.i("RNBLEModule", "Device connected. $device")
-            device?.let {
-                mBluetoothDevices.add(it)
-                Log.i("RNBLEModule", mBluetoothManager.getConnectionState(device, BluetoothProfile.GATT).toString())
-            }
+                Log.i("RNBLEModule", "Device connected. $device")
+                device?.let {
+                    centralDevice = it
+                    onConnect()
+                    Log.i("RNBLEModule", bluetoothManager.getConnectionState(device, BluetoothProfile.GATT).toString())
+                }
             } else {
                 Log.i("RNBLEModule", "Device got disconnected. $device $newState")
             }
@@ -93,31 +139,5 @@ class Peripheral(context: Context, uuid: String) {
             super.onStartFailure(errorCode)
             Log.e("RNBLEModule", "Advertising onStartFailure: $errorCode");
         }
-    }
-    private val mGattServer = mBluetoothManager.openGattServer(context, mGattServerCallback)
-
-    fun start() {
-        val char = BluetoothGattCharacteristic(
-            UUIDHelper.uuidFromString("2031"),
-            BluetoothGattCharacteristic.PROPERTY_READ,
-            BluetoothGattCharacteristic.PERMISSION_READ)
-        service.addCharacteristic(char)
-        mGattServer.addService(service)
-
-
-        val advertiser = mBluetoothAdapter.bluetoothLeAdvertiser
-        val settings = AdvertiseSettings.Builder()
-            .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-            .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
-            .setConnectable(true)
-            .build();
-        val data = AdvertiseData.Builder()
-            .setIncludeDeviceName(true)
-            .addServiceUuid(ParcelUuid(service.uuid))
-            .build()
-
-        Log.i("RNBLEModule", data.toString());
-
-        advertiser.startAdvertising(settings, data, advertisingCallback);
     }
 }
