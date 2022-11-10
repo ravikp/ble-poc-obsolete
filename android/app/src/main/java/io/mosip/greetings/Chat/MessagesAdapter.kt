@@ -1,13 +1,8 @@
-package io.mosip.greetings
+package io.mosip.greetings.Chat
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import io.mosip.greetings.MessagesAdapter
-import io.mosip.greetings.MessagesAdapter.SendHolder
 import android.view.LayoutInflater
-import android.view.View
-import io.mosip.greetings.MessagesAdapter.ReceivedHolder
-import io.mosip.greetings.MessagesAdapter.MessageHolder
 import io.mosip.greetings.R
 import android.widget.TextView
 import androidx.cardview.widget.CardView

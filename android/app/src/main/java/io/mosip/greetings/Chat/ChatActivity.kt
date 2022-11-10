@@ -1,12 +1,11 @@
-package io.mosip.greetings
+package io.mosip.greetings.Chat
 
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
-import kotlin.concurrent.schedule
+import io.mosip.greetings.R
 
 class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

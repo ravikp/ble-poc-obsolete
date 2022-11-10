@@ -7,12 +7,19 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import io.mosip.greetings.Chat.ChatActivity
+import io.mosip.greetings.ble.Common
+import io.mosip.greetings.ble.Peripheral
 import java.util.*
 import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Common.init(this@MainActivity,this)
+        Common.startBluetooth(this@MainActivity)
+
         setContentView(R.layout.activity_main)
 
         findViewById<Button>(R.id.centralButton).let {
@@ -29,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startBroadCasting() {
+        val peripheral = Peripheral(this, "A392")
+        peripheral.start()
+
         findViewById<LinearLayout>(R.id.actionsLayout).let {
             it?.setVisibility(View.GONE)
         }
@@ -47,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        Timer().schedule(500) { moveToChatActivity() }
+//        Timer().schedule(500) { moveToChatActivity() }
         println("Waiting for central to connect")
     }
 
