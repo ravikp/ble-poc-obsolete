@@ -84,18 +84,27 @@ class Peripheral: ChatManager {
 
         val readChar = BluetoothGattCharacteristic(
             READ_MESSAGE_CHAR_UUID,
-            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_INDICATE,
+            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
             BluetoothGattCharacteristic.PERMISSION_READ
         )
+//        readChar.addDescriptor(BluetoothGattDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"),
+//            BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED_MITM
+//                    or BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED_MITM))
 
         service.addCharacteristic(writeChar)
         service.addCharacteristic(readChar)
+
         gattServer.addService(service)
 
         return service
     }
 
     private val gattServerCallback: BluetoothGattServerCallback = object : BluetoothGattServerCallback(){
+        override fun onNotificationSent(device: BluetoothDevice?, status: Int) {
+            super.onNotificationSent(device, status)
+            Log.i("BLE", "Notification sent to device: $device and status: $status")
+        }
+
         override fun onCharacteristicWriteRequest(
             device: BluetoothDevice?,
             requestId: Int,
@@ -189,7 +198,7 @@ class Peripheral: ChatManager {
         output.setValue(message)
 
         if(centralDevice != null) {
-            Log.i("BLE", "Sent notification to device")
+            Log.i("BLE", "Sent notification to device $centralDevice from ${output.uuid}")
             gattServer.notifyCharacteristicChanged(centralDevice!!, output, false)
         }
     }

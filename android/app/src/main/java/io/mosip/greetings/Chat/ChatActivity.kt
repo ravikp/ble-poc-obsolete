@@ -33,7 +33,7 @@ class ChatActivity : AppCompatActivity() {
         description.text = "Talking to " + chatController.peerName
 
         chatManager.addMessageReceiver {
-            mAdapter.addMessage(Message(it,  false))
+            this@ChatActivity.runOnUiThread { mAdapter.addMessage(Message(it, false)) }
         }
 
         sendButton.setOnClickListener {
