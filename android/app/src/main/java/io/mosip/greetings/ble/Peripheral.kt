@@ -84,12 +84,13 @@ class Peripheral: ChatManager {
 
         val readChar = BluetoothGattCharacteristic(
             READ_MESSAGE_CHAR_UUID,
-            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+            BluetoothGattCharacteristic.PROPERTY_READ or BluetoothGattCharacteristic.PROPERTY_INDICATE,
             BluetoothGattCharacteristic.PERMISSION_READ
         )
-//        readChar.addDescriptor(BluetoothGattDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"),
-//            BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED_MITM
-//                    or BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED_MITM))
+
+        readChar.addDescriptor(BluetoothGattDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"),
+            BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED_MITM
+                    or BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED_MITM))
 
         service.addCharacteristic(writeChar)
         service.addCharacteristic(readChar)

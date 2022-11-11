@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'io.mosip.greetings'
-    compileSdk 33
+    compileSdk 31
 
     defaultConfig {
         applicationId "io.mosip.greetings"
@@ -35,7 +35,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildToolsVersion '33.0.0'
+    buildToolsVersion '31'
     ndkVersion '25.1.8937393'
     lintOptions {
         abortOnError false

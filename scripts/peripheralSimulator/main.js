@@ -14,7 +14,6 @@ bleno.on('stateChange', function(state) {
         bleno.stopAdvertising();
     }
 });
-
 let _updateValueCallback = null
 
 bleno.on('advertisingStart', function(error) {

@@ -15,39 +15,28 @@ class Central : ChatManager {
     private var connected: Boolean = false
     private lateinit var peripheralDevice: BluetoothDevice
     private lateinit var onDeviceConnected: () -> Unit
+    private lateinit var onMessageReceived: (String) -> Unit
     private lateinit var bluetoothLeScanner: BluetoothLeScanner;
     private lateinit var onDeviceFound: () -> Unit
     private lateinit var bluetoothGatt: BluetoothGatt
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
-        override fun onCharacteristicWrite(
-            gatt: BluetoothGatt?,
-            characteristic: BluetoothGattCharacteristic?,
-            status: Int
-        ) {
-            super.onCharacteristicWrite(gatt, characteristic, status)
-            Log.i("BLE", "Charaact wrote ")
-
-        }
-
-        override fun onCharacteristicRead(
-            gatt: BluetoothGatt,
-            characteristic: BluetoothGattCharacteristic,
-            value: ByteArray,
-            status: Int
-        ) {
-            super.onCharacteristicRead(gatt, characteristic, value, status)
-            Log.i("BLE", "Charaact read to $value")
-
-        }
-
         override fun onCharacteristicChanged(
             gatt: BluetoothGatt,
             characteristic: BluetoothGattCharacteristic,
-            value: ByteArray
         ) {
-            super.onCharacteristicChanged(gatt, characteristic, value)
-            Log.i("BLE", "Charaact change to $value")
+            super.onCharacteristicChanged(gatt, characteristic)
+            Log.i("BLE", "Characteristic changed to ${String(characteristic.value)}")
+            onMessageReceived(String(characteristic.value))
+        }
+
+        override fun onDescriptorWrite(
+            gatt: BluetoothGatt?,
+            descriptor: BluetoothGattDescriptor?,
+            status: Int
+        ) {
+            super.onDescriptorWrite(gatt, descriptor, status)
+            Log.i("BLE", "$status + ${descriptor?.uuid}")
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
@@ -68,10 +57,7 @@ class Central : ChatManager {
                 Log.i("BLE", "Connected to the peripheral")
                 connected = true
 
-                if (gatt != null) {
-                    gatt.discoverServices()
-                    bluetoothGatt = gatt
-                }
+                gatt?.discoverServices()
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.i("BLE", "Disconnected from the peripheral")
 
@@ -112,17 +98,17 @@ class Central : ChatManager {
             return
         }
 
-        Log.i("BLE", bluetoothGatt.services.map { it.uuid }.toString())
         val service = bluetoothGatt.getService(Peripheral.serviceUUID)
         val readChar = service.getCharacteristic(Peripheral.READ_MESSAGE_CHAR_UUID)
-        Log.i("BLE", service.characteristics.map { it.uuid }.toString())
         bluetoothGatt.setCharacteristicNotification(readChar, true);
 
         Log.i("BLE desc", readChar.descriptors.toString())
-//        val descriptor: BluetoothGattDescriptor = readChar.getDescriptor(UUIDHelper.uuidFromString("00002902-0000-1000-8000-00805f9b34fb"));
-//        descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-//        bluetoothGatt.writeDescriptor(descriptor)
-//
+
+        val descriptor: BluetoothGattDescriptor = readChar.getDescriptor(UUIDHelper.uuidFromString("00002902-0000-1000-8000-00805f9b34fb"));
+        descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+        bluetoothGatt.writeDescriptor(descriptor)
+
+        this.onMessageReceived = onMessageReceived
         Log.i("BLE", "Subscribed to read message char")
     }
 
@@ -175,7 +161,7 @@ class Central : ChatManager {
         this.onDeviceConnected = onDeviceConnected
 
 
-        var gatt = peripheralDevice.connectGatt(
+        val gatt = peripheralDevice.connectGatt(
             context,
             false,
             bluetoothGattCallback,
@@ -183,6 +169,7 @@ class Central : ChatManager {
         )
 
         gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+        bluetoothGatt = gatt
     }
 
 }
