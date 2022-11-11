@@ -36,9 +36,6 @@ class Peripheral: ChatManager {
         }
     }
 
-    override val name: String
-        get() = "Peripheral"
-
     fun start(context: Context, onConnect: () -> Unit) {
         val bluetoothManager:BluetoothManager =
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager

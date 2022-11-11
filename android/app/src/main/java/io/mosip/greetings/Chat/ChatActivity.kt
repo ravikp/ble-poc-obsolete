@@ -1,6 +1,7 @@
 package io.mosip.greetings.chat
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,12 +12,16 @@ import io.mosip.greetings.R
 
 class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val chatManager = ChatController(intent?.getIntExtra("mode", ChatController.PERIPHERAL_MODE)).manager
+        val chatController =
+            ChatController(intent?.getIntExtra("mode", ChatController.PERIPHERAL_MODE))
+        val chatManager = chatController.manager
 
+        Log.i("BLE", "mode ${intent?.getIntExtra("mode", ChatController.PERIPHERAL_MODE)}")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        layoutManager.stackFromEnd = true
         val mRecyclerView = findViewById<RecyclerView>(R.id.messagesRecylerView)
         val mAdapter = MessagesAdapter()
         val sendButton = findViewById<Button>(R.id.sendBtn)
@@ -25,7 +30,7 @@ class ChatActivity : AppCompatActivity() {
         mRecyclerView.adapter = mAdapter
 
         val description = findViewById<TextView>(R.id.chatDescription)
-        description.text = "Talking to " + chatManager.name
+        description.text = "Talking to " + chatController.peerName
 
         chatManager.addMessageReceiver {
             mAdapter.addMessage(Message(it,  false))
