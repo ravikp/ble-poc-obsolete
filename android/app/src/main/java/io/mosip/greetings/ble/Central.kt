@@ -127,6 +127,8 @@ class Central : ChatManager {
         Log.i("ble", "Sent message to peripheral")
     }
 
+    override fun name(): String = "Central"
+
     fun startScanning(context: Context, onDeviceFound: () -> Unit) {
         this.onDeviceFound = onDeviceFound
         val bluetoothManager: BluetoothManager =

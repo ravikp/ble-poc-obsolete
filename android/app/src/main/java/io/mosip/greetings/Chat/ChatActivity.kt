@@ -30,7 +30,7 @@ class ChatActivity : AppCompatActivity() {
         mRecyclerView.adapter = mAdapter
 
         val description = findViewById<TextView>(R.id.chatDescription)
-        description.text = "Talking to " + chatController.peerName
+        description.text = "You are ${chatController.manager.name()} and talking to ${chatController.peerName}"
 
         chatManager.addMessageReceiver {
             this@ChatActivity.runOnUiThread { mAdapter.addMessage(Message(it, false)) }

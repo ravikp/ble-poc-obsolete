@@ -203,4 +203,6 @@ class Peripheral: ChatManager {
             gattServer.notifyCharacteristicChanged(centralDevice!!, output, false)
         }
     }
+
+    override fun name(): String = "Peripheral"
 }

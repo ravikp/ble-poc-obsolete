@@ -82,16 +82,16 @@ class MessagesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private class SendHolder(inflater: LayoutInflater, parent: ViewGroup?) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.component_message_send, parent, false)),
         MessageHolder {
-        var text: TextView
+        var textField: TextView
         var card: CardView
 
         init {
-            text = itemView.findViewById(R.id.sentText)
+            textField = itemView.findViewById(R.id.sentText)
             card = itemView.findViewById(R.id.sentMessageCard)
         }
 
         override fun setText(text: String?) {
-            this.text.text = text
+            this.textField.text = text
         }
     }
 

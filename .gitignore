@@ -114,3 +114,5 @@ android/.idea/
 
 # contains generated code
 android/app/src/main/kotlin/uniffi
+
+ios/generated
