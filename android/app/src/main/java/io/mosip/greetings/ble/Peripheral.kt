@@ -12,7 +12,6 @@ import java.util.*
 
 class Peripheral: ChatManager {
    private lateinit var gattServer: BluetoothGattServer
-    private lateinit var bluetoothManager: BluetoothManager
     private lateinit var onConnect: () -> Unit
     private lateinit var onMessageReceived: (String) -> Unit
 
@@ -78,9 +77,8 @@ class Peripheral: ChatManager {
 
         val writeChar = BluetoothGattCharacteristic(
             WRITE_MESSAGE_CHAR_UUID,
-            BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE,
-            BluetoothGattCharacteristic.PERMISSION_WRITE
-        )
+            BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE or BluetoothGattCharacteristic.PROPERTY_WRITE,
+            BluetoothGattCharacteristic.PERMISSION_WRITE)
 
         val readChar = BluetoothGattCharacteristic(
             READ_MESSAGE_CHAR_UUID,
@@ -95,12 +93,40 @@ class Peripheral: ChatManager {
         service.addCharacteristic(writeChar)
         service.addCharacteristic(readChar)
 
-        gattServer.addService(service)
+        val status =  gattServer.addService(service)
+        Log.i("BLE","Added service $status" )
 
         return service
     }
 
     private val gattServerCallback: BluetoothGattServerCallback = object : BluetoothGattServerCallback(){
+        override fun onDescriptorWriteRequest(
+            device: BluetoothDevice?,
+            requestId: Int,
+            descriptor: BluetoothGattDescriptor?,
+            preparedWrite: Boolean,
+            responseNeeded: Boolean,
+            offset: Int,
+            value: ByteArray?
+        ) {
+            super.onDescriptorWriteRequest(
+                device,
+                requestId,
+                descriptor,
+                preparedWrite,
+                responseNeeded,
+                offset,
+                value
+            )
+
+            Log.i("BLE", "Got descriptor write request with value $value for ${descriptor?.uuid}")
+
+            if(responseNeeded) {
+                Log.i("BLE", "Sending response to descriptor write")
+                gattServer.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, 0, ByteArray(0))
+
+            }
+        }
         override fun onNotificationSent(device: BluetoothDevice?, status: Int) {
             super.onNotificationSent(device, status)
             Log.i("BLE", "Notification sent to device: $device and status: $status")
@@ -164,7 +190,6 @@ class Peripheral: ChatManager {
                 device?.let {
                     centralDevice = it
                     onConnect()
-                    Log.i("RNBLEModule", bluetoothManager.getConnectionState(device, BluetoothProfile.GATT).toString())
                 }
             } else {
                 Log.i("RNBLEModule", "Device got disconnected. $device $newState")
