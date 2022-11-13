@@ -21,6 +21,14 @@ class Central : ChatManager {
     private lateinit var bluetoothGatt: BluetoothGatt
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt?,
+            characteristic: BluetoothGattCharacteristic?,
+            status: Int
+        ) {
+            super.onCharacteristicWrite(gatt, characteristic, status)
+            Log.i("BLE", "Status of write is $status for ${characteristic?.uuid}")
+        }
         override fun onCharacteristicChanged(
             gatt: BluetoothGatt,
             characteristic: BluetoothGattCharacteristic,
@@ -37,6 +45,12 @@ class Central : ChatManager {
         ) {
             super.onDescriptorWrite(gatt, descriptor, status)
             Log.i("BLE", "$status + ${descriptor?.uuid}")
+
+            if(status == BluetoothGatt.GATT_SUCCESS){
+                Log.i("BLE", "Subscribed to read messages from peripheral")
+            } else {
+                Log.i("BLE", "Failed to Subscribe to read messages from peripheral")
+            }
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
@@ -49,6 +63,7 @@ class Central : ChatManager {
             if (gatt != null) {
                 bluetoothGatt = gatt
             }
+
             onDeviceConnected()
         }
 
@@ -98,18 +113,22 @@ class Central : ChatManager {
             return
         }
 
+        this.onMessageReceived = onMessageReceived
+        subscribeToMessages()
+
+    }
+
+    private fun subscribeToMessages() {
+        Log.i("BLE", "Subscribing to read message char")
         val service = bluetoothGatt.getService(Peripheral.serviceUUID)
         val readChar = service.getCharacteristic(Peripheral.READ_MESSAGE_CHAR_UUID)
         bluetoothGatt.setCharacteristicNotification(readChar, true);
 
-        Log.i("BLE desc", readChar.descriptors.toString())
-
-        val descriptor: BluetoothGattDescriptor = readChar.getDescriptor(UUIDHelper.uuidFromString("00002902-0000-1000-8000-00805f9b34fb"));
+        val descriptor: BluetoothGattDescriptor =
+            readChar.getDescriptor(UUIDHelper.uuidFromString("00002902-0000-1000-8000-00805f9b34fb"));
         descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
-        bluetoothGatt.writeDescriptor(descriptor)
-
-        this.onMessageReceived = onMessageReceived
-        Log.i("BLE", "Subscribed to read message char")
+        val status = bluetoothGatt.writeDescriptor(descriptor)
+        Log.i("BLE", "Raised subscription to peripheral: $status")
     }
 
     override fun sendMessage(message: String) {
@@ -122,9 +141,10 @@ class Central : ChatManager {
         val writeChar = service.getCharacteristic(Peripheral.WRITE_MESSAGE_CHAR_UUID)
         val value = message.toByteArray(Charset.defaultCharset());
         writeChar.value = value
-        writeChar.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-        bluetoothGatt.writeCharacteristic(writeChar)
-        Log.i("ble", "Sent message to peripheral")
+        writeChar.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+        val status = bluetoothGatt.writeCharacteristic(writeChar)
+        Log.i("ble", "Sent message to peripheral: $status")
+
     }
 
     override fun name(): String = "Central"
@@ -171,7 +191,6 @@ class Central : ChatManager {
         )
 
         gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
-        bluetoothGatt = gatt
     }
 
 }

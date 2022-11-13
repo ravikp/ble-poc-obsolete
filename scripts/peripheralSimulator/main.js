@@ -73,7 +73,7 @@ const readCharacteristic = new bleno.Characteristic({
 
 const writeCharacteristic = new bleno.Characteristic({
     uuid: '00002031-0000-1000-8000-00805f9b34fb', // or 'fff1' for 16-bit
-    properties: ['writeWithoutResponse'], // can be a combination of 'read', 'write', 'writeWithoutResponse', 'notify', 'indicate'
+    properties: ['writeWithoutResponse', 'write'], // can be a combination of 'read', 'write', 'writeWithoutResponse', 'notify', 'indicate'
     secure: [], // enable security for properties, can be a combination of 'read', 'write', 'writeWithoutResponse', 'notify', 'indicate'
     value: "", // optional static value, must be of type Buffer - for read only characteristics
     descriptors: [],
