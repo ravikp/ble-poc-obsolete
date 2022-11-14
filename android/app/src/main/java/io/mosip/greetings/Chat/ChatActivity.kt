@@ -41,6 +41,7 @@ class ChatActivity : AppCompatActivity() {
             val message = Message(messageInput.text.toString(), true)
             chatManager.sendMessage(message.text)
             mAdapter.addMessage(message)
+            messageInput.text.clear()
         }
     }
 }
