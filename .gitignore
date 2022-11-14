@@ -109,5 +109,11 @@ iOSInjectionProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swift
 
+# IDE
+.idea/
+android/.idea/
+
 # contains generated code
 android/app/src/main/kotlin/uniffi
+
+ios/generated
