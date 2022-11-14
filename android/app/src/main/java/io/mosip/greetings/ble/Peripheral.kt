@@ -86,9 +86,10 @@ class Peripheral: ChatManager {
             BluetoothGattCharacteristic.PERMISSION_READ
         )
 
+        // 2902 - GATT Descriptor UUID for Client characteristic configuration
         readChar.addDescriptor(BluetoothGattDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"),
-            BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED_MITM
-                    or BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED_MITM))
+            BluetoothGattDescriptor.PERMISSION_READ
+                    or BluetoothGattDescriptor.PERMISSION_WRITE))
 
         service.addCharacteristic(writeChar)
         service.addCharacteristic(readChar)
