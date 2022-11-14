@@ -33,15 +33,20 @@ class ChatActivity : AppCompatActivity() {
         description.text = "You are ${chatController.manager.name()} and talking to ${chatController.peerName}"
 
         chatManager.addMessageReceiver {
+            mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
             this@ChatActivity.runOnUiThread { mAdapter.addMessage(Message(it, false)) }
         }
 
         sendButton.setOnClickListener {
             val messageInput = findViewById<EditText>(R.id.messageInput)
             val message = Message(messageInput.text.toString(), true)
+            if (messageInput.text.trim().isEmpty()) {
+                return@setOnClickListener
+            }
             chatManager.sendMessage(message.text)
             mAdapter.addMessage(message)
             messageInput.text.clear()
+            mRecyclerView.smoothScrollToPosition(mAdapter.itemCount-1)
         }
     }
 }
