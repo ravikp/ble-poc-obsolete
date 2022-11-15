@@ -14,12 +14,30 @@ import kotlin.reflect.KFunction0
 
 class Common {
     companion object {
+        // For Central and Android 9 or lower
+        // Requires : Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION
+        //
+        // For Peripheral and Android 9 or lower
+        // Requires : Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
+        //
+        // For Central and Android 11 or lower
+        // Requires : Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_FINE_LOCATION
+        //
+        // For Peripheral and Android 11 or lower
+        // Requires : Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
+        //
+        // For Central and Android 12 or higher
+        // Requires : Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN
+        //
+        // For Peripheral and Android 12 or higher
+        // Requires : Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_ADVERTISE
+        //
         private const val REQUEST_CODE_REQUIRED_PERMISSIONS = 2
         private var REQUIRED_PERMISSIONS: Array<String>
         private val REQUIRED_PERMISSIONS_FOR_API_LEVEL_31_AND_ABOVE = arrayOf(
             Manifest.permission.BLUETOOTH_CONNECT,
             Manifest.permission.BLUETOOTH_ADVERTISE,
-            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_SCAN
         )
         private val REQUIRED_PERMISSIONS_FOR_API_LEVEL_BELOW_31 = arrayOf(
             Manifest.permission.BLUETOOTH,
