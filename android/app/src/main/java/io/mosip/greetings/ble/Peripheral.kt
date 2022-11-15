@@ -10,13 +10,15 @@ import android.util.Log
 import io.mosip.greetings.chat.ChatManager
 import java.util.*
 
+// Sequence of actions
+// Broadcasting/Advertising -> Connecting -> Indicate Central when data available to read
 class Peripheral: ChatManager {
    private lateinit var gattServer: BluetoothGattServer
     private lateinit var onConnect: () -> Unit
     private lateinit var onMessageReceived: (String) -> Unit
 
     private var centralDevice: BluetoothDevice? = null
-    var advertising: Boolean = false;
+    var advertising: Boolean = false
 
     companion object {
         @Volatile
@@ -46,10 +48,10 @@ class Peripheral: ChatManager {
         val service = getService()
         val settings = advertiseSettings()
         val data = advertiseData(service)
-        this.onConnect = onConnect;
+        this.onConnect = onConnect
 
-        advertiser.startAdvertising(settings, data, advertisingCallback);
-        Log.i("BLEPeripheral", "Started advertising: $data")
+        advertiser.startAdvertising(settings, data, advertisingCallback)
+        Log.i("BLE Peripheral", "Started advertising: $data")
 
     }
 
@@ -61,12 +63,11 @@ class Peripheral: ChatManager {
     }
 
     private fun advertiseSettings(): AdvertiseSettings? {
-        val settings = AdvertiseSettings.Builder()
+        return AdvertiseSettings.Builder()
             .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
             .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
             .setConnectable(true)
-            .build();
-        return settings
+            .build()
     }
 
     private fun getService(): BluetoothGattService {
@@ -94,7 +95,7 @@ class Peripheral: ChatManager {
         service.addCharacteristic(readChar)
 
         val status =  gattServer.addService(service)
-        Log.i("BLE","Added service $status" )
+        Log.i("BLE Peripheral","Added service $status" )
 
         return service
     }
@@ -119,17 +120,17 @@ class Peripheral: ChatManager {
                 value
             )
 
-            Log.i("BLE", "Got descriptor write request with value $value for ${descriptor?.uuid}")
+            Log.i("BLE Peripheral", "Got descriptor write request with value $value for ${descriptor?.uuid}")
 
             if(responseNeeded) {
-                Log.i("BLE", "Sending response to descriptor write")
+                Log.i("BLE Peripheral", "Sending response to descriptor write")
                 gattServer.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, 0, ByteArray(0))
 
             }
         }
         override fun onNotificationSent(device: BluetoothDevice?, status: Int) {
             super.onNotificationSent(device, status)
-            Log.i("BLE", "Notification sent to device: $device and status: $status")
+            Log.i("BLE Peripheral", "Notification sent to device: $device and status: $status")
         }
 
         override fun onCharacteristicWriteRequest(
@@ -151,7 +152,7 @@ class Peripheral: ChatManager {
                 value
             )
             Log.d(
-                "BLE",
+                "BLE Peripheral",
                 "onCharacteristicWriteRequest characteristic=" + characteristic.uuid + " value=" + Arrays.toString(
                     value
                 )
@@ -162,7 +163,7 @@ class Peripheral: ChatManager {
             }
 
             if(responseNeeded) {
-                gattServer.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, 0, null);
+                gattServer.sendResponse(device, requestId, BluetoothGatt.GATT_SUCCESS, 0, null)
             }
         }
 
@@ -173,7 +174,7 @@ class Peripheral: ChatManager {
             characteristic: BluetoothGattCharacteristic
         ) {
             super.onCharacteristicReadRequest(device, requestId, offset, characteristic)
-            Log.d("BLE", "onCharacteristicReadRequest requestId=$requestId offset=$offset")
+            Log.d("BLE Peripheral", "onCharacteristicReadRequest requestId=$requestId offset=$offset")
             gattServer.sendResponse(
                 device,
                 requestId,
@@ -186,13 +187,13 @@ class Peripheral: ChatManager {
             super.onConnectionStateChange(device, status, newState)
 
             if(newState == BluetoothProfile.STATE_CONNECTED){
-                Log.i("RNBLEModule", "Device connected. $device")
+                Log.i("BLE Peripheral", "Device connected. $device")
                 device?.let {
                     centralDevice = it
                     onConnect()
                 }
             } else {
-                Log.i("RNBLEModule", "Device got disconnected. $device $newState")
+                Log.i("BLE Peripheral", "Device got disconnected. $device $newState")
             }
         }
     }
@@ -202,13 +203,13 @@ class Peripheral: ChatManager {
             super.onStartSuccess(settingsInEffect)
             advertising = true
 
-            Log.i("RNBLEModule", "Advertising onStartSuccess");
+            Log.i("BLE Peripheral", "Advertising onStartSuccess")
         }
 
         override fun onStartFailure(errorCode: Int) {
             advertising = false
             super.onStartFailure(errorCode)
-            Log.e("RNBLEModule", "Advertising onStartFailure: $errorCode");
+            Log.e("BLE Peripheral", "Advertising onStartFailure: $errorCode")
         }
     }
 
@@ -224,7 +225,7 @@ class Peripheral: ChatManager {
         output.setValue(message)
 
         if(centralDevice != null) {
-            Log.i("BLE", "Sent notification to device $centralDevice from ${output.uuid}")
+            Log.i("BLE Peripheral", "Sent notification to device $centralDevice from ${output.uuid}")
             gattServer.notifyCharacteristicChanged(centralDevice!!, output, false)
         }
     }

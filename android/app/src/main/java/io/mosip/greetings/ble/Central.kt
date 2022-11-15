@@ -9,7 +9,8 @@ import android.util.Log
 import io.mosip.greetings.chat.ChatManager
 import java.nio.charset.Charset
 
-
+// Sequence of actions
+// Scanning -> Connecting -> Discover Services -> Subscribes to Read Characteristic
 class Central : ChatManager {
     private var scanning: Boolean = false
     private var connected: Boolean = false
@@ -27,14 +28,15 @@ class Central : ChatManager {
             status: Int
         ) {
             super.onCharacteristicWrite(gatt, characteristic, status)
-            Log.i("BLE", "Status of write is $status for ${characteristic?.uuid}")
+            Log.i("BLE Central", "Status of write is $status for ${characteristic?.uuid}")
         }
+
         override fun onCharacteristicChanged(
             gatt: BluetoothGatt,
             characteristic: BluetoothGattCharacteristic,
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
-            Log.i("BLE", "Characteristic changed to ${String(characteristic.value)}")
+            Log.i("BLE Central", "Characteristic changed to ${String(characteristic.value)}")
             onMessageReceived(String(characteristic.value))
         }
 
@@ -44,22 +46,22 @@ class Central : ChatManager {
             status: Int
         ) {
             super.onDescriptorWrite(gatt, descriptor, status)
-            Log.i("BLE", "$status + ${descriptor?.uuid}")
+            Log.i("BLE Central", "$status + ${descriptor?.uuid}")
 
-            if(status == BluetoothGatt.GATT_SUCCESS){
-                Log.i("BLE", "Subscribed to read messages from peripheral")
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.i("BLE Central", "Subscribed to read messages from peripheral")
             } else {
-                Log.i("BLE", "Failed to Subscribe to read messages from peripheral")
+                Log.i("BLE Central", "Failed to Subscribe to read messages from peripheral")
             }
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status);
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                Log.e("BLE", "Failed to discover services")
+                Log.e("BLE Central", "Failed to discover services")
                 return;
             }
-            Log.i("BLE", "discovered services: ${gatt?.services?.map { it.uuid }}")
+            Log.i("BLE Central", "discovered services: ${gatt?.services?.map { it.uuid }}")
             if (gatt != null) {
                 bluetoothGatt = gatt
             }
@@ -69,12 +71,12 @@ class Central : ChatManager {
 
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                Log.i("BLE", "Connected to the peripheral")
+                Log.i("BLE Central", "Connected to the peripheral")
                 connected = true
 
                 gatt?.discoverServices()
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Log.i("BLE", "Disconnected from the peripheral")
+                Log.i("BLE Central", "Disconnected from the peripheral")
 
                 connected = false
                 gatt?.disconnect()
@@ -85,7 +87,7 @@ class Central : ChatManager {
 
     private val leScanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            Log.i("BLE", "Found the device: $result")
+            Log.i("BLE Central", "Found the device: $result")
             stopScan()
             super.onScanResult(callbackType, result)
             peripheralDevice = result.device
@@ -109,7 +111,7 @@ class Central : ChatManager {
 
     override fun addMessageReceiver(onMessageReceived: (String) -> Unit) {
         if (!connected) {
-            Log.e("BLE", "Peripheral is not connected")
+            Log.e("BLE Central", "Peripheral is not connected")
             return
         }
 
@@ -119,7 +121,7 @@ class Central : ChatManager {
     }
 
     private fun subscribeToMessages() {
-        Log.i("BLE", "Subscribing to read message char")
+        Log.i("BLE Central", "Subscribing to read message char")
         val service = bluetoothGatt.getService(Peripheral.serviceUUID)
         val readChar = service.getCharacteristic(Peripheral.READ_MESSAGE_CHAR_UUID)
         bluetoothGatt.setCharacteristicNotification(readChar, true);
@@ -128,12 +130,12 @@ class Central : ChatManager {
             readChar.getDescriptor(UUIDHelper.uuidFromString("00002902-0000-1000-8000-00805f9b34fb"));
         descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
         val status = bluetoothGatt.writeDescriptor(descriptor)
-        Log.i("BLE", "Raised subscription to peripheral: $status")
+        Log.i("BLE Central", "Raised subscription to peripheral: $status")
     }
 
     override fun sendMessage(message: String) {
         if (!connected) {
-            Log.e("BLE", "Peripheral is not connected")
+            Log.e("BLE Central", "Peripheral is not connected")
             return
         }
 
@@ -143,7 +145,7 @@ class Central : ChatManager {
         writeChar.value = value
         writeChar.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
         val status = bluetoothGatt.writeCharacteristic(writeChar)
-        Log.i("ble", "Sent message to peripheral: $status")
+        Log.i("BLE Central", "Sent message to peripheral: $status")
 
     }
 
@@ -179,7 +181,7 @@ class Central : ChatManager {
     }
 
     fun connect(context: Context, onDeviceConnected: () -> Unit) {
-        Log.i("BLE", "Connecting to Peripheral")
+        Log.i("BLE Central", "Connecting to Peripheral")
         this.onDeviceConnected = onDeviceConnected
 
 

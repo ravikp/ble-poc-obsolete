@@ -15,6 +15,7 @@
 		0A675AC228FD90BF00A2F3E8 /* rusty_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A675AC128FD90BF00A2F3E8 /* rusty_iosUITests.swift */; };
 		0A675AC428FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A675AC328FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift */; };
 		0A675AD7290175D400A2F3E8 /* librustylib_binding.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A675AD62901758100A2F3E8 /* librustylib_binding.a */; };
+		3B4B9B87291A6C7D005CB381 /* identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4B9B86291A6C7D005CB381 /* identity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		0A675AC328FD90BF00A2F3E8 /* rusty_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rusty_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		0A675AD428FDA6DB00A2F3E8 /* librustylib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librustylib.a; path = ../libs/librustylib.a; sourceTree = "<group>"; };
 		0A675AD62901758100A2F3E8 /* librustylib_binding.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librustylib_binding.a; path = ../libs/librustylib_binding.a; sourceTree = "<group>"; };
+		3B4B9B86291A6C7D005CB381 /* identity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = identity.swift; path = ../generated/identity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 		0A675A9A28FD90BD00A2F3E8 = {
 			isa = PBXGroup;
 			children = (
+				3B4B9B86291A6C7D005CB381 /* identity.swift */,
 				0A675AA528FD90BD00A2F3E8 /* rusty-ios */,
 				0A675AB628FD90BF00A2F3E8 /* rusty-iosTests */,
 				0A675AC028FD90BF00A2F3E8 /* rusty-iosUITests */,
@@ -271,6 +274,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B4B9B87291A6C7D005CB381 /* identity.swift in Sources */,
 				0A675AA928FD90BD00A2F3E8 /* ContentView.swift in Sources */,
 				0A675AA728FD90BD00A2F3E8 /* rusty_iosApp.swift in Sources */,
 			);
@@ -448,7 +452,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/../include/rustylib.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/../include/identityFFI.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -479,7 +483,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "learning.rusty-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/../include/rustylib.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/../include/identityFFI.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

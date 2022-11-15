@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Common.requestForRequiredPermissions(this@MainActivity, this)
+        Common.requestForRequiredPermissions(this@MainActivity, this, this::showActionsView)
     }
 
     override fun onRequestPermissionsResult(
@@ -32,15 +32,18 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
             showPermErrorView()
             return
         }
-        showActionsView()
-        Common.startBluetooth(this@MainActivity)
+        Common.requestForRequiredPermissions(this@MainActivity, this, this::showActionsView)
     }
 
     private fun showPermErrorView() {
         setContentView(R.layout.activity_main_error)
         findViewById<TextView>(R.id.errorText).text = getString(R.string.permission_error_message)
         findViewById<Button>(R.id.requestPermBtn).setOnClickListener {
-            Common.requestForRequiredPermissions(this@MainActivity, this)
+            Common.requestForRequiredPermissions(
+                this@MainActivity,
+                this,
+                this::showActionsView
+            )
         }
     }
 
