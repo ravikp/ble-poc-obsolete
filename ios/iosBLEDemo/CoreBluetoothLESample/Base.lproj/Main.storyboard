@@ -127,7 +127,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Here is a bunch of sample text. Hold another device close to see the transfer happen." translatesAutoresizingMaskIntoConstraints="NO" id="b4y-1z-Myd">
-                                <rect key="frame" x="7" y="48" width="359" height="716"/>
+                                <rect key="frame" x="7" y="233" width="359" height="98"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
@@ -137,11 +137,20 @@
                                     <outlet property="delegate" destination="fAL-1c-sOi" id="5wn-Bt-gYe"/>
                                 </connections>
                             </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Central is connecting to peripheral" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vpk-Gh-JN2">
+                                <rect key="frame" x="69" y="116" width="240" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tDD-N7-g8C"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
+                        <outlet property="isConnected" destination="vpk-Gh-JN2" id="Hor-Wr-Xdc"/>
                         <outlet property="textView" destination="b4y-1z-Myd" id="F81-Ry-Zjo"/>
                     </connections>
                 </viewController>

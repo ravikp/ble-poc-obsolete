@@ -14,6 +14,7 @@ class PeripheralViewController: UIViewController {
     @IBOutlet var textView: UITextView!
     // @IBOutlet var advertisingSwitch: UISwitch!
     
+    @IBOutlet weak var isConnected: UITextView!
     var peripheralManager: CBPeripheralManager!
 
     var transferCharacteristic: CBMutableCharacteristic?
@@ -31,6 +32,8 @@ class PeripheralViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         // Don't keep advertising going while we're not showing.
+        isConnected.text = "Disconnecting"
+        // TODO: Check if the peripheralManager needs to gracefully terminate connections with the central
         peripheralManager.stopAdvertising()
 
         super.viewWillDisappear(animated)
@@ -169,8 +172,10 @@ extension PeripheralViewController: CBPeripheralManagerDelegate {
         case .resetting:
             os_log("CBManager is resetting")
             // In a real app, you'd deal with all the states accordingly
+            // TODO: When this happens & what should be shown in UI here??
             return
         case .unauthorized:
+            // TODO: Show some error?
             // In a real app, you'd deal with all the states accordingly
             if #available(iOS 13.0, *) {
                 switch peripheral.authorization {
@@ -191,6 +196,7 @@ extension PeripheralViewController: CBPeripheralManagerDelegate {
             return
         case .unsupported:
             os_log("Bluetooth is not supported on this device")
+            
             // In a real app, you'd deal with all the states accordingly
             return
         @unknown default:
@@ -204,6 +210,7 @@ extension PeripheralViewController: CBPeripheralManagerDelegate {
      *  Catch when someone subscribes to our characteristic, then start sending them data
      */
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
+        isConnected.text = "Peripheral is connected to Central"
         os_log("Central subscribed to characteristic")
         
         // Get the data
@@ -215,15 +222,16 @@ extension PeripheralViewController: CBPeripheralManagerDelegate {
         
         // save central
         connectedCentral = central
-        
         // Start sending
         sendData()
+        
     }
     
     /*
      *  Recognize when the central unsubscribes
      */
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
+        // TODO: change the isConnected text
         os_log("Central unsubscribed from characteristic")
         connectedCentral = nil
     }

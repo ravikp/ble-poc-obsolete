@@ -54,7 +54,7 @@ class CentralViewController: UIViewController {
         let connectedPeripherals: [CBPeripheral] = (centralManager.retrieveConnectedPeripherals(withServices: [TransferService.serviceUUID]))
         
         os_log("Found connected Peripherals with transfer service: %@", connectedPeripherals)
-        
+        // TODO: Should we show a list of peripherals to connect to each time if there are >1?
         if let connectedPeripheral = connectedPeripherals.last {
             os_log("Connecting to peripheral %@", connectedPeripheral)
 			self.discoveredPeripheral = connectedPeripheral
