@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
             showPermErrorView()
             return
         }
+        Common.requestForRequiredPermissions(this@MainActivity, this, this::showActionsView)
     }
 
     private fun showPermErrorView() {

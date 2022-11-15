@@ -15,20 +15,22 @@ import kotlin.reflect.KFunction0
 class Common {
     companion object {
         private const val REQUEST_CODE_REQUIRED_PERMISSIONS = 2
-        private val REQUIRED_PERMISSIONS_OVER_API_LEVEL_31 = arrayOf(
+        private var REQUIRED_PERMISSIONS: Array<String>
+        private val REQUIRED_PERMISSIONS_FOR_API_LEVEL_31_AND_ABOVE = arrayOf(
             Manifest.permission.BLUETOOTH_CONNECT,
             Manifest.permission.BLUETOOTH_ADVERTISE,
             Manifest.permission.BLUETOOTH_SCAN,
-            Manifest.permission.ACCESS_FINE_LOCATION,
         )
-        private var REQUIRED_PERMISSIONS = arrayOf(
+        private val REQUIRED_PERMISSIONS_FOR_API_LEVEL_BELOW_31 = arrayOf(
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
         )
         init {
-            if (android.os.Build.VERSION.SDK_INT >= 31) {
-                REQUIRED_PERMISSIONS += REQUIRED_PERMISSIONS_OVER_API_LEVEL_31
+            REQUIRED_PERMISSIONS = if (android.os.Build.VERSION.SDK_INT >= 31) {
+                REQUIRED_PERMISSIONS_FOR_API_LEVEL_31_AND_ABOVE
+            } else {
+                REQUIRED_PERMISSIONS_FOR_API_LEVEL_BELOW_31
             }
         }
         private const val REQUEST_ENABLE_BT = 3
