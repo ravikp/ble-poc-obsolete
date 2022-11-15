@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import kotlin.reflect.KFunction0
 
 
 class Common {
@@ -45,7 +46,11 @@ class Common {
             return true
         }
 
-        fun requestForRequiredPermissions(activity: Activity, context: Context) {
+        fun requestForRequiredPermissions(
+            activity: Activity,
+            context: Context,
+            showActionsView: KFunction0<Unit>
+        ) {
             if (!checkPermissions(context)) {
                 ActivityCompat.requestPermissions(
                     activity,
@@ -53,7 +58,10 @@ class Common {
                     REQUEST_CODE_REQUIRED_PERMISSIONS
                 )
                 Toast.makeText(context, "Requested permissions", Toast.LENGTH_SHORT).show()
+                return
             }
+            showActionsView()
+            startBluetooth(activity)
         }
 
         fun startBluetooth(activity: Activity) {
