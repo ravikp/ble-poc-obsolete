@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BDL-8d-Pjg">
-    <device id="retina5_9" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -14,7 +14,7 @@
             <objects>
                 <navigationController id="BDL-8d-Pjg" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="1No-T9-RmE">
-                        <rect key="frame" x="0.0" y="47" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -30,11 +30,11 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="CoreBluetoothLESample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xaA-1R-cJh">
-                                <rect key="frame" x="115.66666666666667" y="418" width="143.66666666666663" height="32"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xaA-1R-cJh">
+                                <rect key="frame" x="135" y="630" width="144" height="32"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Peripheral Mode">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -49,8 +49,8 @@
                                     <segue destination="fAL-1c-sOi" kind="show" id="e4z-pg-AHM"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jIc-f9-zc5">
-                                <rect key="frame" x="126.33333333333334" y="370" width="122.33333333333334" height="32"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jIc-f9-zc5">
+                                <rect key="frame" x="146" y="292" width="122" height="32"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Central Mode">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -71,8 +71,8 @@
                         <constraints>
                             <constraint firstItem="xaA-1R-cJh" firstAttribute="centerX" secondItem="jIc-f9-zc5" secondAttribute="centerX" id="VO4-M2-koK"/>
                             <constraint firstItem="xaA-1R-cJh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="aJQ-5H-Iv8"/>
-                            <constraint firstItem="jIc-f9-zc5" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="75" id="mIA-3K-z3X"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xaA-1R-cJh" secondAttribute="bottom" constant="75" id="nNY-Sk-URz"/>
+                            <constraint firstItem="jIc-f9-zc5" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="200" id="mIA-3K-z3X"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xaA-1R-cJh" secondAttribute="bottom" constant="200" id="nNY-Sk-URz"/>
                             <constraint firstItem="jIc-f9-zc5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pBr-1L-qAd"/>
                         </constraints>
                     </view>
@@ -87,11 +87,11 @@
             <objects>
                 <viewController title="Central" id="fSl-V7-HRz" customClass="CentralViewController" customModule="CoreBluetoothLESample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7iS-HE-dyC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nnY-OJ-Igu">
-                                <rect key="frame" x="8" y="91" width="359" height="713"/>
+                                <rect key="frame" x="8" y="92" width="398" height="796"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -123,11 +123,11 @@
             <objects>
                 <viewController title="Peripheral" id="fAL-1c-sOi" customClass="PeripheralViewController" customModule="CoreBluetoothLESample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JLl-HW-WyH">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Here is a bunch of sample text. Hold another device close to see the transfer happen." translatesAutoresizingMaskIntoConstraints="NO" id="b4y-1z-Myd">
-                                <rect key="frame" x="7" y="233" width="359" height="98"/>
+                                <rect key="frame" x="6" y="233" width="398" height="98"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
