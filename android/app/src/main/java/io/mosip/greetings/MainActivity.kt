@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import io.mosip.greetings.ble.Central
 import io.mosip.greetings.chat.ChatActivity
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        
         Common.requestForRequiredPermissions(this@MainActivity, this, this::showActionsView)
     }
 
