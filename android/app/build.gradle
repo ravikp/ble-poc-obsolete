@@ -5,11 +5,13 @@ plugins {
 
 android {
     namespace 'io.mosip.greetings'
+    // Android 13 = API Level 33
     compileSdk 33
 
     defaultConfig {
         applicationId "io.mosip.greetings"
-        minSdk 21
+        // Android 9 = API Level 28
+        minSdk 28
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -35,7 +37,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildToolsVersion '31'
+    buildToolsVersion '28'
     ndkVersion '25.1.8937393'
     lintOptions {
         abortOnError false
