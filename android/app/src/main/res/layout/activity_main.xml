@@ -28,14 +28,14 @@
             android:visibility="visible" />
 
         <TextView
-            android:id="@+id/errorText"
+            android:id="@+id/loadingText"
             android:layout_width="289dp"
             android:layout_height="54dp"
             android:layout_gravity="center"
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/requestPermBtn"
+            android:id="@+id/cancelLoadingBtn"
             android:layout_width="168dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

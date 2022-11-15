@@ -2,6 +2,7 @@ package io.mosip.greetings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        
+
         Common.requestForRequiredPermissions(this@MainActivity, this, this::showActionsView)
     }
 
@@ -35,18 +36,79 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
             showPermErrorView()
             return
         }
+        Log.i("Permissions", "${grantResults.joinToString()} for $requestCode")
+
         Common.requestForRequiredPermissions(this@MainActivity, this, this::showActionsView)
     }
 
-    private fun showPermErrorView() {
-        setContentView(R.layout.activity_main_error)
-        findViewById<TextView>(R.id.errorText).text = getString(R.string.permission_error_message)
-        findViewById<Button>(R.id.requestPermBtn).setOnClickListener {
-            Common.requestForRequiredPermissions(
-                this@MainActivity,
-                this,
-                this::showActionsView
-            )
+    private fun startBroadCasting() {
+        peripheral = Peripheral.getInstance();
+        peripheral.start(this) {
+            moveToChatActivity(ChatController.PERIPHERAL_MODE)
+        }
+
+        showLoadingLayout()
+        updateLoadingText(getString(R.string.broadcastingMessage))
+        setCancelLoadingButton  {
+            this.stopBroadCasting(peripheral)
+        }
+
+        Log.i("BLE", "Waiting for central to connect")
+    }
+
+    private fun stopBroadCasting(peripheral: Peripheral) {
+        peripheral.stop()
+        showActionsLayout()
+
+        Log.i("BLE", "Stopping broadcast")
+    }
+
+    private fun startScanningForPeripheral() {
+        showLoadingLayout()
+        updateLoadingText(getString(R.string.ScanningMessage))
+        setCancelLoadingButton {
+            this.stopScanningForPeripheral()
+        }
+
+        val central = Central.getInstance()
+        central.startScanning(this) {
+            central.connect(this) {
+                moveToChatActivity(ChatController.CENTRAL_MODE)
+            }
+        }
+
+        Log.i("BLE","Starting Scan");
+    }
+
+    private fun stopScanningForPeripheral() {
+        showActionsLayout()
+
+        Central.getInstance().stopScan()
+        Log.i("BLE","Stopping Scan");
+    }
+
+    private fun setCancelLoadingButton(onClick: (View) -> Unit) {
+        findViewById<Button>(R.id.cancelLoadingBtn).let {
+            it?.setOnClickListener(onClick)
+        }
+    }
+
+    private fun showActionsLayout() {
+        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
+            it?.setVisibility(View.GONE)
+        }
+
+        findViewById<LinearLayout>(R.id.actionsLayout).let {
+            it?.setVisibility(View.VISIBLE)
+        }
+    }
+
+    private fun showLoadingLayout() {
+        findViewById<LinearLayout>(R.id.actionsLayout).let {
+            it?.setVisibility(View.GONE)
+        }
+        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
+            it?.setVisibility(View.VISIBLE)
         }
     }
 
@@ -66,88 +128,27 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
         }
     }
 
-    private fun startBroadCasting() {
-        peripheral = Peripheral.getInstance();
-        peripheral.start(this) {
-            moveToChatActivity(ChatController.PERIPHERAL_MODE)
+    private fun showPermErrorView() {
+        setContentView(R.layout.activity_main_error)
+        findViewById<TextView>(R.id.errorText).text = getString(R.string.permission_error_message)
+        findViewById<Button>(R.id.requestPermBtn).setOnClickListener {
+            Common.requestForRequiredPermissions(
+                this@MainActivity,
+                this,
+                this::showActionsView
+            )
         }
+    }
 
-        findViewById<LinearLayout>(R.id.actionsLayout).let {
-            it?.setVisibility(View.GONE)
+    private fun updateLoadingText(message: String) {
+        findViewById<TextView>(R.id.loadingText).let {
+            it?.setText(message)
         }
-        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
-            it?.setVisibility(View.VISIBLE)
-        }
-
-        findViewById<TextView>(R.id.errorText).let {
-            it?.setText(getString(R.string.broadcastingMessage))
-        }
-
-        findViewById<Button>(R.id.requestPermBtn).let {
-            it?.setOnClickListener {
-                this.stopBroadCasting()
-            }
-        }
-
-        println("Waiting for central to connect")
     }
 
     private fun moveToChatActivity(mode: Int) {
         val intent = Intent(this@MainActivity, ChatActivity::class.java)
         intent.putExtra("mode", mode)
         startActivity(intent)
-    }
-
-    private fun stopBroadCasting() {
-        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
-            it?.setVisibility(View.GONE)
-        }
-
-        findViewById<LinearLayout>(R.id.actionsLayout).let {
-            it?.setVisibility(View.VISIBLE)
-        }
-
-        println("Stopping broadcast")
-    }
-
-    private fun startScanningForPeripheral() {
-        findViewById<LinearLayout>(R.id.actionsLayout).let {
-            it?.setVisibility(View.GONE)
-        }
-        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
-            it?.setVisibility(View.VISIBLE)
-        }
-
-        findViewById<TextView>(R.id.errorText).let {
-            it?.setText(getString(R.string.ScanningMessage))
-        }
-
-        findViewById<Button>(R.id.requestPermBtn).let {
-            it?.setOnClickListener {
-                this.stopScanningForPeripheral()
-            }
-        }
-
-        val central = Central.getInstance()
-        central.startScanning(this) {
-            central.connect(this) {
-                moveToChatActivity(ChatController.CENTRAL_MODE)
-            }
-        }
-
-        println("Starting Scan")
-    }
-
-    private fun stopScanningForPeripheral() {
-        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
-            it?.setVisibility(View.GONE)
-        }
-
-        findViewById<LinearLayout>(R.id.actionsLayout).let {
-            it?.setVisibility(View.VISIBLE)
-        }
-
-        Central.getInstance().stopScan()
-        println("Stopping Scan")
     }
 }

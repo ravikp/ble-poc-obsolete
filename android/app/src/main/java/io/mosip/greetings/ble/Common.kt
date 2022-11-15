@@ -80,11 +80,12 @@ class Common {
                 Toast.makeText(context, "Requested permissions", Toast.LENGTH_SHORT).show()
                 return
             }
+
             showActionsView()
             startBluetooth(activity)
         }
 
-        fun startBluetooth(activity: Activity) {
+        private fun startBluetooth(activity: Activity) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }

@@ -4,6 +4,7 @@ import android.bluetooth.*
 import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
+import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
 import android.os.ParcelUuid
 import android.util.Log
@@ -13,7 +14,8 @@ import java.util.*
 // Sequence of actions
 // Broadcasting/Advertising -> Connecting -> Indicate Central when data available to read
 class Peripheral: ChatManager {
-   private lateinit var gattServer: BluetoothGattServer
+    private lateinit var advertiser: BluetoothLeAdvertiser
+    private lateinit var gattServer: BluetoothGattServer
     private lateinit var onConnect: () -> Unit
     private lateinit var onMessageReceived: (String) -> Unit
 
@@ -41,7 +43,7 @@ class Peripheral: ChatManager {
         val bluetoothManager:BluetoothManager =
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val mBluetoothAdapter = bluetoothManager.adapter
-        val advertiser = mBluetoothAdapter.bluetoothLeAdvertiser
+        advertiser = mBluetoothAdapter.bluetoothLeAdvertiser
 
         gattServer = bluetoothManager.openGattServer(context, gattServerCallback)
 
@@ -52,7 +54,10 @@ class Peripheral: ChatManager {
 
         advertiser.startAdvertising(settings, data, advertisingCallback)
         Log.i("BLE Peripheral", "Started advertising: $data")
+    }
 
+    fun stop() {
+        advertiser.stopAdvertising(advertisingCallback)
     }
 
     private fun advertiseData(service: BluetoothGattService): AdvertiseData? {
