@@ -117,3 +117,4 @@ android/.idea/
 android/app/src/main/kotlin/uniffi
 
 ios/generated
+android/local.properties
