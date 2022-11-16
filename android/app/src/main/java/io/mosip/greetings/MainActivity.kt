@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         Common.requestForRequiredPermissions(this@MainActivity, this, this::showActionsView)
     }
