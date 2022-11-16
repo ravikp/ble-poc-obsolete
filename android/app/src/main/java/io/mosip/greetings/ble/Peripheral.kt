@@ -13,12 +13,12 @@ import java.util.*
 
 // Sequence of actions
 // Broadcasting/Advertising -> Connecting -> Indicate Central when data available to read
-class Peripheral: ChatManager {
+class Peripheral : ChatManager {
+    private lateinit var updateLoadingText: (String) -> Unit
     private lateinit var advertiser: BluetoothLeAdvertiser
     private lateinit var gattServer: BluetoothGattServer
     private lateinit var onConnect: () -> Unit
     private lateinit var onMessageReceived: (String) -> Unit
-
     private var centralDevice: BluetoothDevice? = null
     var advertising: Boolean = false
 
@@ -39,7 +39,9 @@ class Peripheral: ChatManager {
         }
     }
 
-    fun start(context: Context, onConnect: () -> Unit) {
+
+
+    fun start(context: Context, onConnect: () -> Unit, updateLoadingText: (String) -> Unit) {
         val bluetoothManager:BluetoothManager =
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val mBluetoothAdapter = bluetoothManager.adapter
@@ -51,6 +53,7 @@ class Peripheral: ChatManager {
         val settings = advertiseSettings()
         val data = advertiseData(service)
         this.onConnect = onConnect
+        this.updateLoadingText = updateLoadingText
 
         advertiser.startAdvertising(settings, data, advertisingCallback)
         Log.i("BLE Peripheral", "Started advertising: $data")
@@ -99,7 +102,7 @@ class Peripheral: ChatManager {
         service.addCharacteristic(writeChar)
         service.addCharacteristic(readChar)
 
-        val status =  gattServer.addService(service)
+        val status = gattServer.addService(service)
         Log.i("BLE Peripheral","Added service $status" )
 
         return service
@@ -194,6 +197,7 @@ class Peripheral: ChatManager {
             if(newState == BluetoothProfile.STATE_CONNECTED){
                 Log.i("BLE Peripheral", "Device connected. $device")
                 device?.let {
+                    updateLoadingText("connected to ${device.name}.")
                     centralDevice = it
                     onConnect()
                 }
@@ -216,6 +220,7 @@ class Peripheral: ChatManager {
             advertising = false
             super.onStartFailure(errorCode)
             Log.e("BLE Peripheral", "Advertising onStartFailure: $errorCode")
+
         }
     }
 

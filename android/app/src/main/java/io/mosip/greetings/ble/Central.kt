@@ -13,6 +13,7 @@ import java.nio.charset.Charset
 // Sequence of actions
 // Scanning -> Connecting -> Discover Services -> Subscribes to Read Characteristic
 class Central : ChatManager {
+    private lateinit var updateLoadingText: (String) -> Unit
     private var scanning: Boolean = false
     private var connected: Boolean = false
     private lateinit var peripheralDevice: BluetoothDevice
@@ -28,8 +29,11 @@ class Central : ChatManager {
             characteristic: BluetoothGattCharacteristic?,
             status: Int
         ) {
-            super.onCharacteristicWrite(gatt, characteristic, status)
             Log.i("BLE Central", "Status of write is $status for ${characteristic?.uuid}")
+
+            if(status != BluetoothGatt.GATT_SUCCESS) {
+                Log.i("BLE", "\"Failed to send message to peripheral")
+            }
         }
 
         override fun onCharacteristicChanged(
@@ -46,13 +50,15 @@ class Central : ChatManager {
             descriptor: BluetoothGattDescriptor?,
             status: Int
         ) {
-            super.onDescriptorWrite(gatt, descriptor, status)
             Log.i("BLE Central", "$status + ${descriptor?.uuid}")
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.i("BLE Central", "Subscribed to read messages from peripheral")
+                updateLoadingText("Subscribed to peripheral")
             } else {
                 Log.i("BLE Central", "Failed to Subscribe to read messages from peripheral")
+
+                updateLoadingText("Failed to subscribe to peripheral")
             }
         }
 
@@ -62,7 +68,10 @@ class Central : ChatManager {
                 Log.e("BLE Central", "Failed to discover services")
                 return
             }
+
             Log.i("BLE Central", "discovered services: ${gatt?.services?.map { it.uuid }}")
+            updateLoadingText("Discovered Services.")
+
             if (gatt != null) {
                 bluetoothGatt = gatt
             }
@@ -73,6 +82,7 @@ class Central : ChatManager {
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.i("BLE Central", "Connected to the peripheral")
+                updateLoadingText("Connected to the peripheral")
                 connected = true
 
                 gatt?.discoverServices()
@@ -90,8 +100,11 @@ class Central : ChatManager {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             Log.i("BLE Central", "Found the device: $result")
             stopScan()
+
             super.onScanResult(callbackType, result)
             peripheralDevice = result.device
+
+            updateLoadingText("Found a peripheral with name: ${peripheralDevice.name}")
             onDeviceFound()
         }
     }
@@ -153,14 +166,15 @@ class Central : ChatManager {
 
     override fun name(): String = "Central"
 
-    fun startScanning(context: Context, onDeviceFound: () -> Unit) {
-        this.onDeviceFound = onDeviceFound
-        val bluetoothManager: BluetoothManager =
-            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
-        bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-        val handler = Handler(Looper.getMainLooper())
+    fun startScanning(
+        context: Context,
+        onDeviceFound: () -> Unit,
+        updateLoadingText: (String) -> Unit
+    ) {
+        init(onDeviceFound, context)
+        this.updateLoadingText = updateLoadingText
 
+        val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             if (scanning)
                 stopScan()
@@ -176,6 +190,14 @@ class Central : ChatManager {
             ScanSettings.Builder().build(),
             leScanCallback
         )
+    }
+
+    private fun init(onDeviceFound: () -> Unit, context: Context) {
+        this.onDeviceFound = onDeviceFound
+        val bluetoothManager: BluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
+        bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
     }
 
     fun stopScan() {

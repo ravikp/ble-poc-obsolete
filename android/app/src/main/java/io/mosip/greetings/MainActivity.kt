@@ -10,14 +10,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import io.mosip.greetings.ble.Central
-import io.mosip.greetings.chat.ChatActivity
 import io.mosip.greetings.ble.Common
 import io.mosip.greetings.ble.Peripheral
+import io.mosip.greetings.chat.ChatActivity
 import io.mosip.greetings.chat.ChatController
 
 class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
-    private lateinit var peripheral: Peripheral
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,10 +38,14 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
     }
 
     private fun startBroadCasting() {
-        peripheral = Peripheral.getInstance()
-        peripheral.start(this) {
-            moveToChatActivity(ChatController.PERIPHERAL_MODE)
-        }
+        val peripheral = Peripheral.getInstance()
+        peripheral.start(this,
+            onConnect = { moveToChatActivity(ChatController.PERIPHERAL_MODE) },
+            updateLoadingText =  {
+            runOnUiThread {
+                updateLoadingText(it)
+            }
+        })
 
         showLoadingLayout()
         updateLoadingText(getString(R.string.broadcastingMessage))
@@ -69,11 +71,10 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
         }
 
         val central = Central.getInstance()
-        central.startScanning(this) {
-            central.connect(this) {
-                moveToChatActivity(ChatController.CENTRAL_MODE)
-            }
-        }
+        central.startScanning(this,
+            onDeviceFound =  { central.connect(this) { moveToChatActivity(ChatController.CENTRAL_MODE) } },
+            updateLoadingText = { runOnUiThread { updateLoadingText(it) } }
+        )
 
         Log.i("BLE","Starting Scan")
     }
