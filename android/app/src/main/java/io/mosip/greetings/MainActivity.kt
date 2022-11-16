@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import io.mosip.greetings.ble.Central
 import io.mosip.greetings.chat.ChatActivity
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
     }
 
     private fun startBroadCasting() {
-        peripheral = Peripheral.getInstance();
+        peripheral = Peripheral.getInstance()
         peripheral.start(this) {
             moveToChatActivity(ChatController.PERIPHERAL_MODE)
         }
@@ -76,14 +75,14 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
             }
         }
 
-        Log.i("BLE","Starting Scan");
+        Log.i("BLE","Starting Scan")
     }
 
     private fun stopScanningForPeripheral() {
         showActionsLayout()
 
         Central.getInstance().stopScan()
-        Log.i("BLE","Stopping Scan");
+        Log.i("BLE","Stopping Scan")
     }
 
     private fun setCancelLoadingButton(onClick: (View) -> Unit) {
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
     }
 
     private fun showActionsLayout() {
-        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
+        findViewById<LinearLayout>(R.id.loaderLayout).let {
             it?.setVisibility(View.GONE)
         }
 
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
         findViewById<LinearLayout>(R.id.actionsLayout).let {
             it?.setVisibility(View.GONE)
         }
-        findViewById<LinearLayout>(R.id.mainErrorLayout).let {
+        findViewById<LinearLayout>(R.id.loaderLayout).let {
             it?.setVisibility(View.VISIBLE)
         }
     }
