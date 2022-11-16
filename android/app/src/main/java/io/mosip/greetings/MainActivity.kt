@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import io.mosip.greetings.ble.Central
@@ -14,6 +15,7 @@ import io.mosip.greetings.ble.Common
 import io.mosip.greetings.ble.Peripheral
 import io.mosip.greetings.chat.ChatActivity
 import io.mosip.greetings.chat.ChatController
+
 
 class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +73,13 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
         }
 
         val central = Central.getInstance()
+        val onDeviceFound = {
+            central.connect(this,
+                onDeviceConnected = { moveToChatActivity(ChatController.CENTRAL_MODE)},
+                onConnectionFailure = this::failureDialog)
+        }
         central.startScanning(this,
-            onDeviceFound =  { central.connect(this) { moveToChatActivity(ChatController.CENTRAL_MODE) } },
+            onDeviceFound = onDeviceFound ,
             updateLoadingText = { runOnUiThread { updateLoadingText(it) } }
         )
 
@@ -149,5 +156,14 @@ class MainActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
         val intent = Intent(this@MainActivity, ChatActivity::class.java)
         intent.putExtra("mode", mode)
         startActivity(intent)
+    }
+
+    private fun failureDialog(errMessage: String) {
+        runOnUiThread {
+            AlertDialog.Builder(this)
+                .setTitle("Connection Failed")
+                .setMessage(errMessage)
+                .show()
+        }
     }
 }

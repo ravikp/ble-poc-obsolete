@@ -21,7 +21,9 @@ class Central : ChatManager {
     private lateinit var onMessageReceived: (String) -> Unit
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private lateinit var onDeviceFound: () -> Unit
+    private lateinit var onConnectionFailure: (String) -> Unit
     private lateinit var bluetoothGatt: BluetoothGatt
+    private var servicesDiscoveryRetryCounter = 0
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onCharacteristicWrite(
@@ -56,6 +58,7 @@ class Central : ChatManager {
                 Log.i("BLE Central", "Subscribed to read messages from peripheral")
                 updateLoadingText("Subscribed to peripheral")
             } else {
+                onConnectionFailure("Failed to Subscribe to read messages from peripheral. Please retry connecting.")
                 Log.i("BLE Central", "Failed to Subscribe to read messages from peripheral")
 
                 updateLoadingText("Failed to subscribe to peripheral")
@@ -76,7 +79,19 @@ class Central : ChatManager {
                 bluetoothGatt = gatt
             }
 
-            onDeviceConnected()
+            val hasPeripheralService = gatt?.services?.map { it.uuid }?.contains(Peripheral.serviceUUID)
+
+            if(hasPeripheralService == true) {
+                onDeviceConnected()
+            } else if(servicesDiscoveryRetryCounter != 0) {
+                Log.i("BLE", "Retrying discover services times: $servicesDiscoveryRetryCounter")
+                updateLoadingText("Retrying discover Services: $servicesDiscoveryRetryCounter")
+                servicesDiscoveryRetryCounter--
+                gatt?.discoverServices()
+            } else {
+                onConnectionFailure("Unable to discover the peripheral service. Please retry connecting.")
+            }
+
         }
 
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
@@ -204,10 +219,14 @@ class Central : ChatManager {
         bluetoothLeScanner.stopScan(leScanCallback)
     }
 
-    fun connect(context: Context, onDeviceConnected: () -> Unit) {
+    fun connect(
+        context: Context,
+        onDeviceConnected: () -> Unit,
+        onConnectionFailure: (String) -> Unit
+    ) {
         Log.i("BLE Central", "Connecting to Peripheral")
         this.onDeviceConnected = onDeviceConnected
-
+        this.onConnectionFailure = onConnectionFailure
 
         val gatt = peripheralDevice.connectGatt(
             context,
