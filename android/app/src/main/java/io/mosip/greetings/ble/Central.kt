@@ -96,12 +96,15 @@ class Central : ChatManager {
                 Log.i("BLE", "Retrying discover services times: $servicesDiscoveryRetryCounter")
                 updateLoadingText("Retrying discover Services: $servicesDiscoveryRetryCounter")
                 servicesDiscoveryRetryCounter--
-                gatt?.discoverServices()
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    gatt?.discoverServices()
+                }, 300)
+
             } else {
                 onConnectionFailure("Unable to discover the peripheral service. Please retry connecting.")
                 servicesDiscoveryRetryCounter = 3
             }
-
         }
 
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
