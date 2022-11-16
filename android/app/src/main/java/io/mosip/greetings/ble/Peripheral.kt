@@ -198,6 +198,7 @@ class Peripheral: ChatManager {
                     onConnect()
                 }
             } else {
+                centralDevice = null
                 Log.i("BLE Peripheral", "Device got disconnected. $device $newState")
             }
         }
@@ -222,7 +223,7 @@ class Peripheral: ChatManager {
         this.onMessageReceived = onMessageReceived
     }
 
-    override fun sendMessage(message: String) {
+    override fun sendMessage(message: String): String? {
         val output = gattServer
             .getService(serviceUUID)
             .getCharacteristic(READ_MESSAGE_CHAR_UUID)
@@ -232,6 +233,9 @@ class Peripheral: ChatManager {
         if(centralDevice != null) {
             Log.i("BLE Peripheral", "Sent notification to device $centralDevice from ${output.uuid}")
             gattServer.notifyCharacteristicChanged(centralDevice!!, output, false)
+            return null
+        } else {
+            return "Central is not connected."
         }
     }
 

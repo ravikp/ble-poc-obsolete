@@ -1,9 +1,10 @@
-package io.mosip.greetings.ble;
+package io.mosip.greetings.ble
 
 import android.bluetooth.*
 import android.bluetooth.le.*
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.os.ParcelUuid
 import android.util.Log
 import io.mosip.greetings.chat.ChatManager
@@ -17,7 +18,7 @@ class Central : ChatManager {
     private lateinit var peripheralDevice: BluetoothDevice
     private lateinit var onDeviceConnected: () -> Unit
     private lateinit var onMessageReceived: (String) -> Unit
-    private lateinit var bluetoothLeScanner: BluetoothLeScanner;
+    private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private lateinit var onDeviceFound: () -> Unit
     private lateinit var bluetoothGatt: BluetoothGatt
 
@@ -56,10 +57,10 @@ class Central : ChatManager {
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-            super.onServicesDiscovered(gatt, status);
+            super.onServicesDiscovered(gatt, status)
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.e("BLE Central", "Failed to discover services")
-                return;
+                return
             }
             Log.i("BLE Central", "discovered services: ${gatt?.services?.map { it.uuid }}")
             if (gatt != null) {
@@ -124,29 +125,30 @@ class Central : ChatManager {
         Log.i("BLE Central", "Subscribing to read message char")
         val service = bluetoothGatt.getService(Peripheral.serviceUUID)
         val readChar = service.getCharacteristic(Peripheral.READ_MESSAGE_CHAR_UUID)
-        bluetoothGatt.setCharacteristicNotification(readChar, true);
+        bluetoothGatt.setCharacteristicNotification(readChar, true)
 
         val descriptor: BluetoothGattDescriptor =
-            readChar.getDescriptor(UUIDHelper.uuidFromString("00002902-0000-1000-8000-00805f9b34fb"));
+            readChar.getDescriptor(UUIDHelper.uuidFromString("00002902-0000-1000-8000-00805f9b34fb"))
         descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
         val status = bluetoothGatt.writeDescriptor(descriptor)
         Log.i("BLE Central", "Raised subscription to peripheral: $status")
     }
 
-    override fun sendMessage(message: String) {
+    override fun sendMessage(message: String): String? {
         if (!connected) {
             Log.e("BLE Central", "Peripheral is not connected")
-            return
+            return "Peripheral is not connected"
         }
 
         val service = bluetoothGatt.getService(Peripheral.serviceUUID)
         val writeChar = service.getCharacteristic(Peripheral.WRITE_MESSAGE_CHAR_UUID)
-        val value = message.toByteArray(Charset.defaultCharset());
+        val value = message.toByteArray(Charset.defaultCharset())
         writeChar.value = value
         writeChar.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
         val status = bluetoothGatt.writeCharacteristic(writeChar)
         Log.i("BLE Central", "Sent message to peripheral: $status")
 
+        return null
     }
 
     override fun name(): String = "Central"
@@ -157,7 +159,7 @@ class Central : ChatManager {
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
 
         handler.postDelayed({
             if (scanning)

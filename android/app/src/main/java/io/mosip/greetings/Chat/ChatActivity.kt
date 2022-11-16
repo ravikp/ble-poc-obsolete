@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +44,13 @@ class ChatActivity : AppCompatActivity() {
             if (messageInput.text.trim().isEmpty()) {
                 return@setOnClickListener
             }
-            chatManager.sendMessage(message.text)
+            val error = chatManager.sendMessage(message.text)
+
+            if(error != null) {
+                Toast.makeText(this@ChatActivity, error, Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
             mAdapter.addMessage(message)
             messageInput.text.clear()
             mRecyclerView.smoothScrollToPosition(mAdapter.itemCount-1)

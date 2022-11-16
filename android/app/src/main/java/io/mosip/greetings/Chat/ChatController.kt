@@ -17,7 +17,7 @@ class ChatController(mode: Int?) {
             manager =  Peripheral.getInstance()
             peerName = "Central"
         } else {
-            manager =Central.getInstance()
+            manager = Central.getInstance()
             peerName = "Peripheral"
         };
     }

@@ -2,6 +2,7 @@ package io.mosip.greetings.chat
 
 interface ChatManager {
     fun addMessageReceiver(onMessageReceived: (String) -> Unit)
-    fun sendMessage(message: String)
+    //Returns error if message not sent
+    fun sendMessage(message: String): String?
     fun name():String
 }
