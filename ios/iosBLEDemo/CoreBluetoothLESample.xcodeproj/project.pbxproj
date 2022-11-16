@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,7 @@
 		0AE6E65C291BE07700101232 /* librustylib_binding.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A47B5A1291BBD6200808C4C /* librustylib_binding.a */; };
 		0AE6E65E291BE1D000101232 /* identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE6E65D291BE1D000101232 /* identity.swift */; };
 		A9A7C756227E1D6200F2CC59 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A9A7C755227E1D6200F2CC59 /* README.md */; };
+		CA55CC9929248FC000B89FDE /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = CA55CC9829248FC000B89FDE /* MessageKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AE6E65C291BE07700101232 /* librustylib_binding.a in Frameworks */,
+				CA55CC9929248FC000B89FDE /* MessageKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +128,9 @@
 			dependencies = (
 			);
 			name = CoreBluetoothLESample;
+			packageProductDependencies = (
+				CA55CC9829248FC000B89FDE /* MessageKit */,
+			);
 			productName = BTLETransfer;
 			productReference = 012C3064226FD13B00BADEF9 /* CoreBluetoothLESample.app */;
 			productType = "com.apple.product-type.application";
@@ -155,6 +160,9 @@
 				Base,
 			);
 			mainGroup = 012C305B226FD13B00BADEF9;
+			packageReferences = (
+				CA55CC9729248FC000B89FDE /* XCRemoteSwiftPackageReference "MessageKit" */,
+			);
 			productRefGroup = 012C3065226FD13B00BADEF9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -415,6 +423,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CA55CC9729248FC000B89FDE /* XCRemoteSwiftPackageReference "MessageKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MessageKit/MessageKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CA55CC9829248FC000B89FDE /* MessageKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CA55CC9729248FC000B89FDE /* XCRemoteSwiftPackageReference "MessageKit" */;
+			productName = MessageKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 012C305C226FD13B00BADEF9 /* Project object */;
 }
