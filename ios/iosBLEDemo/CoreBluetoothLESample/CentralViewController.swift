@@ -8,6 +8,8 @@ A class to discover, connect, receive notifications and write data to peripheral
 import UIKit
 import CoreBluetooth
 import os
+import MessageKit
+import Messages
 
 class CentralViewController: UIViewController {
     // UIViewController overrides, properties specific to this class, private helper methods, etc.
@@ -30,7 +32,13 @@ class CentralViewController: UIViewController {
     override func viewDidLoad() {
         centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
         super.viewDidLoad()
-
+        // show chat messages
+        // TODO: Connect to a peripheral !!
+        // DONE: Initialise controller with storyboard!
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "centralchat") as! ChatViewController
+        nextViewController.title = "Chat"
+        navigationController?.pushViewController(nextViewController, animated: true)
     }
 	
     override func viewWillDisappear(_ animated: Bool) {
@@ -378,4 +386,57 @@ extension CentralViewController: CBPeripheralDelegate {
         os_log("Peripheral is ready, send data")
         writeData()
     }
+}
+
+// MessageViewController implements the UI for this, MessageType has the message metadata(like who sent i, etc)
+
+struct Sender: SenderType {
+    var senderId: String
+    var displayName: String
+}
+
+struct Message: MessageType {
+    var sender: MessageKit.SenderType
+    var messageId: String
+    var sentDate: Date
+    var kind: MessageKit.MessageKind
+    
+}
+
+class ChatViewController: MessagesViewController, MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
+    var currentSender: MessageKit.SenderType = Sender(senderId: "self", displayName: "iOS")
+    let otherUser = Sender(senderId: "other", displayName: "Android")
+    var messages :[MessageType] = []
+    override func viewDidLoad() {
+        // super.viewDidLoad()
+        messages.append(Message(sender: currentSender,
+                                messageId: "1",
+                                sentDate: Date().addingTimeInterval(-86400),
+                                kind: .text("Hello world")))
+        messages.append(Message(sender: otherUser,
+                                messageId: "2",
+                                sentDate: Date().addingTimeInterval(-85400),
+                                kind: .text("Hi")))
+        messages.append(Message(sender: currentSender,
+                                messageId: "3",
+                                sentDate: Date().addingTimeInterval(-84400),
+                                kind: .text("Byte")))
+        messages.append(Message(sender: otherUser,
+                                messageId: "4",
+                                sentDate: Date().addingTimeInterval(-86300),
+                                kind: .text("bye")))
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+        super.viewDidLoad()
+    }
+    
+    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessageKit.MessagesCollectionView) -> MessageKit.MessageType {
+        return messages[indexPath.section]
+    }
+    
+    func numberOfSections(in messagesCollectionView: MessageKit.MessagesCollectionView) -> Int {
+        return messages.count
+    }
+    
 }

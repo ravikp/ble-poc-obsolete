@@ -118,6 +118,21 @@
             </objects>
             <point key="canvasLocation" x="1052" y="-403"/>
         </scene>
+        <!--Chat View Controller-->
+        <scene sceneID="VYm-So-VSE">
+            <objects>
+                <viewController storyboardIdentifier="centralchat" id="7FI-Pz-Mj6" customClass="ChatViewController" customModule="CoreBluetoothLESample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="g8y-oI-fbR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="rNX-yc-zkU"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mZu-hT-zG1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1859" y="-409"/>
+        </scene>
         <!--Peripheral-->
         <scene sceneID="eSo-6h-0jF">
             <objects>
@@ -126,17 +141,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Here is a bunch of sample text. Hold another device close to see the transfer happen." translatesAutoresizingMaskIntoConstraints="NO" id="b4y-1z-Myd">
-                                <rect key="frame" x="6" y="233" width="398" height="98"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <color key="textColor" systemColor="labelColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <connections>
-                                    <outlet property="delegate" destination="fAL-1c-sOi" id="5wn-Bt-gYe"/>
-                                </connections>
-                            </textView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Central is connecting to peripheral" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vpk-Gh-JN2">
                                 <rect key="frame" x="69" y="116" width="240" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -151,7 +155,6 @@
                     </view>
                     <connections>
                         <outlet property="isConnected" destination="vpk-Gh-JN2" id="Hor-Wr-Xdc"/>
-                        <outlet property="textView" destination="b4y-1z-Myd" id="F81-Ry-Zjo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6vW-FK-Qx5" userLabel="First Responder" sceneMemberID="firstResponder"/>
