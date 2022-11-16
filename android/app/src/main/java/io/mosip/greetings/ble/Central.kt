@@ -23,7 +23,7 @@ class Central : ChatManager {
     private lateinit var onDeviceFound: () -> Unit
     private lateinit var onConnectionFailure: (String) -> Unit
     private lateinit var bluetoothGatt: BluetoothGatt
-    private var servicesDiscoveryRetryCounter = 0
+    private var servicesDiscoveryRetryCounter = 3
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onCharacteristicWrite(
@@ -65,6 +65,12 @@ class Central : ChatManager {
             }
         }
 
+        override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
+            super.onMtuChanged(gatt, mtu, status)
+            onDeviceConnected()
+            Log.i("BLE Central", "Successfully changed mtu size")
+        }
+
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
             if (status != BluetoothGatt.GATT_SUCCESS) {
@@ -82,14 +88,18 @@ class Central : ChatManager {
             val hasPeripheralService = gatt?.services?.map { it.uuid }?.contains(Peripheral.serviceUUID)
 
             if(hasPeripheralService == true) {
-                onDeviceConnected()
-            } else if(servicesDiscoveryRetryCounter != 0) {
+                Log.i("BLE Central", "Device is connected")
+                val success = gatt.requestMtu(517)
+                Log.i("BLE Central", "Word size: $success")
+                servicesDiscoveryRetryCounter = 3
+            } else if(servicesDiscoveryRetryCounter > 0) {
                 Log.i("BLE", "Retrying discover services times: $servicesDiscoveryRetryCounter")
                 updateLoadingText("Retrying discover Services: $servicesDiscoveryRetryCounter")
                 servicesDiscoveryRetryCounter--
                 gatt?.discoverServices()
             } else {
                 onConnectionFailure("Unable to discover the peripheral service. Please retry connecting.")
+                servicesDiscoveryRetryCounter = 3
             }
 
         }
@@ -99,7 +109,6 @@ class Central : ChatManager {
                 Log.i("BLE Central", "Connected to the peripheral")
                 updateLoadingText("Connected to the peripheral")
                 connected = true
-
                 gatt?.discoverServices()
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.i("BLE Central", "Disconnected from the peripheral")
